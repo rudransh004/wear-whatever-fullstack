@@ -13,9 +13,30 @@ datasource db {
   provider = "postgresql"
 }
 
-model user{
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  name      String?
-  createdAt DateTime  @default(now())
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  price       Float
+  images      String[] // Array of image URLs
+  category    String
+  isAiEnabled Boolean  @default(false) // To mark AI-generated shirts
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id       String   @id @default(cuid())
+  email    String   @unique
+  name     String?
+  orders   Order[]
+}
+
+model Order {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  total     Float
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
 }
