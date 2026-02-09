@@ -36,7 +36,7 @@ async function main() {
       description: "Clean, simple, and essential for every wardrobe.",
       price: 899.00,
       category: "Essential",
-      images: ["https://images.unsplash.com/photo-1554568212-3c1630c92144"],
+      images: ["https://rukminim2.flixcart.com/image/832/832/xif0q/t-shirt/u/4/n/l-befearlessmaroon-cb-crazybee-tshirts-original-imahbrnrfm6zmfet.jpeg?q=70&crop=false"],
       isAiEnabled: false
     }
   ]
