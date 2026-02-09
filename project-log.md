@@ -50,3 +50,29 @@ model Order {
   status    String   @default("PENDING")
   createdAt DateTime @default(now())
 }
+```
+
+## Phase 3: Database Integration & API Layer
+
+Established a stable and scalable database integration between the Next.js application and Supabase, and introduced the first backend API surface.
+
+### 1. Prisma 7 Runtime Configuration
+- Configured Prisma using `prisma.config.ts` at the project root instead of `package.json`.
+- This enables typed, explicit configuration and aligns with Prisma 7’s recommended setup for long-term maintainability.
+- Adopted Prisma 7’s new driver adapter approach by installing `@prisma/adapter-pg` and `pg`, preparing the project for serverless-friendly execution without the legacy engine dependency.
+
+### 2. Database Client Lifecycle Management
+- Implemented a centralized database utility at `src/lib/db.ts`.
+- Used a Singleton pattern to ensure a single `PrismaClient` instance during development, preventing excessive database connections caused by Next.js hot reloading.
+- This solution primarily addresses development-time issues; production connection limits will rely on Supabase’s built-in pooling.
+
+### 3. Database Seeding Strategy
+- Created a seed script at `prisma/seed.ts` to populate the database with initial T-shirt product data.
+- The script resets product data using `deleteMany()` before insertion to guarantee a deterministic, clean database state during early development.
+- This approach is intentionally destructive and limited to non-production environments.
+
+### 4. Initial REST API Development
+- Implemented the first backend route handler at `app/api/products/route.ts`.
+- Added a `GET` endpoint to fetch all products from the database and return them as JSON for frontend consumption.
+- Wrapped database access in `try/catch` blocks to handle connection or query failures gracefully and return appropriate server error responses.
+- A REST-based API was chosen at this stage to keep data access decoupled from UI logic and to allow independent testing and future extensibility.
