@@ -1,6 +1,7 @@
 "use client";
 import Image from 'next/image';
 import Link from 'next/link';
+import { useCart } from '../lib/store'; // Import the Zustand hook
 
 interface ProductProps {
   product: {
@@ -14,10 +15,27 @@ interface ProductProps {
 }
 
 export default function ProductCard({ product }: ProductProps) {
+  // Extract actions from the cart store
+  const { addItem, openCart } = useCart();
+
+  const handleAddToCart = () => {
+    // 1. Add the specific product data to the global state
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images[0],
+      quantity: 1,
+    });
+
+    // 2. Open the sidebar so the user sees the confirmation
+    openCart();
+  };
+
   return (
     <div className="group flex flex-col h-full bg-zinc-950 border border-white/5 rounded-none overflow-hidden transition-all hover:border-purple-500/40">
       
-      {/* 1. IMAGE CONTAINER: MUST HAVE 'relative' AND 'aspect-square' */}
+      {/* 1. IMAGE CONTAINER */}
       <Link href={`/product/${product.id}`} className="relative aspect-square w-full overflow-hidden bg-zinc-900 block">
         <Image 
           src={product.images[0]} 
@@ -48,7 +66,11 @@ export default function ProductCard({ product }: ProductProps) {
           {product.description}
         </p>
 
-        <button className="w-full bg-white text-black py-4 text-xs font-black uppercase tracking-tighter hover:bg-purple-600 hover:text-white transition-all">
+        {/* 3. UPDATED BUTTON: Calls handleAddToCart */}
+        <button 
+          onClick={handleAddToCart}
+          className="w-full bg-white text-black py-4 text-xs font-black uppercase tracking-tighter hover:bg-purple-600 hover:text-white transition-all"
+        >
           Add to Cart
         </button>
       </div>

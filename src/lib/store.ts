@@ -1,0 +1,46 @@
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+// Define what a Cart Item looks like
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+}
+
+interface CartStore {
+  items: CartItem[];
+  isOpen: boolean; // Controls if the sidebar is visible
+  openCart: () => void;
+  closeCart: () => void;
+  addItem: (product: CartItem) => void;
+  removeItem: (id: string) => void;
+}
+
+export const useCart = create<CartStore>()(
+  persist(
+    (set) => ({
+      items: [],
+      isOpen: false,
+      openCart: () => set({ isOpen: true }),
+      closeCart: () => set({ isOpen: false }),
+      addItem: (newItem) => set((state) => {
+        const existingItem = state.items.find((item) => item.id === newItem.id);
+        if (existingItem) {
+          return {
+            items: state.items.map((item) =>
+              item.id === newItem.id ? { ...item, quantity: item.quantity + 1 } : item
+            ),
+          };
+        }
+        return { items: [...state.items, { ...newItem, quantity: 1 }] };
+      }),
+      removeItem: (id) => set((state) => ({
+        items: state.items.filter((item) => item.id !== id),
+      })),
+    }),
+    { name: 'cart-storage' } // This saves the cart in the browser's LocalStorage!
+  )
+);
