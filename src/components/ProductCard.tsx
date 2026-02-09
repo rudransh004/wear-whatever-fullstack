@@ -1,4 +1,6 @@
+"use client";
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface ProductProps {
   product: {
@@ -13,24 +15,40 @@ interface ProductProps {
 
 export default function ProductCard({ product }: ProductProps) {
   return (
-    <div className="group relative bg-zinc-900 border border-white/10 overflow-hidden rounded-lg transition-all hover:border-purple-500/50">
-      <div className="aspect-square overflow-hidden bg-zinc-800">
-        <img 
+    <div className="group flex flex-col h-full bg-zinc-950 border border-white/5 rounded-none overflow-hidden transition-all hover:border-purple-500/40">
+      
+      {/* 1. IMAGE CONTAINER: MUST HAVE 'relative' AND 'aspect-square' */}
+      <Link href={`/product/${product.id}`} className="relative aspect-square w-full overflow-hidden bg-zinc-900 block">
+        <Image 
           src={product.images[0]} 
           alt={product.name}
-          className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-in-out"
         />
-      </div>
-      <div className="p-4">
-        <div className="flex justify-between items-start">
+      </Link>
+
+      {/* 2. TEXT CONTENT */}
+      <div className="p-6 flex flex-col flex-grow">
+        <div className="flex justify-between items-start mb-4">
           <div>
-            <p className="text-xs font-mono text-purple-400 uppercase tracking-widest">{product.category}</p>
-            <h3 className="text-lg font-bold text-white mt-1">{product.name}</h3>
+            <p className="text-[10px] font-mono text-purple-500 uppercase tracking-widest mb-1">
+              {product.category}
+            </p>
+            <Link href={`/product/${product.id}`}>
+              <h3 className="text-xl font-bold text-white group-hover:text-purple-400 transition-colors uppercase italic tracking-tighter">
+                {product.name}
+              </h3>
+            </Link>
           </div>
-          <p className="text-lg font-mono text-white">₹{product.price}</p>
+          <span className="text-lg font-mono text-white">₹{product.price}</span>
         </div>
-        <p className="mt-2 text-sm text-gray-400 line-clamp-2">{product.description}</p>
-        <button className="mt-4 w-full bg-white text-black py-2 text-sm font-bold hover:bg-purple-500 hover:text-white transition-colors">
+        
+        <p className="text-sm text-zinc-500 line-clamp-2 mb-6 flex-grow leading-relaxed">
+          {product.description}
+        </p>
+
+        <button className="w-full bg-white text-black py-4 text-xs font-black uppercase tracking-tighter hover:bg-purple-600 hover:text-white transition-all">
           Add to Cart
         </button>
       </div>
