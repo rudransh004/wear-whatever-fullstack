@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
         hostname: 'rukminim2.flixcart.com', // Fixes the Runtime Error
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'mqtaafuvnujrqcmuqvsx.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
   },
 };

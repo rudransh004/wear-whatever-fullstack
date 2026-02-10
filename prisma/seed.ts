@@ -9,10 +9,12 @@ const adapter = new PrismaPg(pool)
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  console.log('Start seeding...')
+  console.log('Start seeding all WearWhatever products...')
 
   // Cleanup existing data to prevent duplicates
   await prisma.product.deleteMany()
+
+  const baseUrl = "https://mqtaafuvnujrqcmuqvsx.supabase.co/storage/v1/object/public/product-images/product-images";
 
   const products = [
     {
@@ -20,23 +22,231 @@ async function main() {
       description: "Heavyweight cotton with a futuristic neon aesthetic.",
       price: 1299.00,
       category: "Oversized",
-      images: ["https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"],
+      images: [`${baseUrl}/Cyberpunk-Oversized-Tee/front.jpg`], // Ensure filename matches your upload
       isAiEnabled: false
     },
     {
-      name: "AI Generated: Abstract Dreams",
-      description: "A unique pattern created by our custom Diffusion model.",
-      price: 1499.00,
-      category: "AI Edition",
-      images: ["https://images.unsplash.com/photo-1503342217505-b0a15ec3261c"],
-      isAiEnabled: true
+      name: "All Die I Will Alive",
+      description: "Bold graphic statement tee from the WearWhatever legacy collection.",
+      price: 999.00,
+      category: "Graphic",
+      images: [`${baseUrl}/All_die_I_ll_alive/front.jpg`],
+      isAiEnabled: false
     },
     {
-      name: "Minimalist 'Whatever' Script",
-      description: "Clean, simple, and essential for every wardrobe.",
+      name: "Anime Girl Edition",
+      description: "Custom illustrated anime aesthetic for the modern otaku.",
+      price: 1099.00,
+      category: "Anime",
+      images: [`${baseUrl}/Anime_girl/girl_anime_frame_4.png`],
+      isAiEnabled: false
+    },
+    {
+      name: "Astronaut Edition",
+      description: "Space-themed minimalist design exploring the digital frontier.",
+      price: 1199.00,
+      category: "Astronaut_Edition",
+      images: [`${baseUrl}/Astronaut_Edition/Astronuat_Black_2.png`],
+      isAiEnabled: false
+    },
+    {
+      name: "Billie Eilish Tribute",
+      description: "Streetwear inspired by the iconic style of Billie Eilish.",
+      price: 1299.00,
+      category: "Artist",
+      images: [`${baseUrl}/BILLIE_EILISH/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "BOBB Graphic Tee",
+      description: "Unique character design from the BOBB collection.",
+      price: 899.00,
+      category: "Graphic",
+      images: [`${baseUrl}/BOBB/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Boy Anime Concept",
+      description: "Sleek boy anime character illustration on premium fabric.",
+      price: 1099.00,
+      category: "Anime",
+      images: [`${baseUrl}/Boy_Anime/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "BTH Signature",
+      description: "Modern typography and abstract elements.",
+      price: 899.00,
+      category: "Minimalist",
+      images: [`${baseUrl}/BTH/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "California Dreamin'",
+      description: "West-coast inspired aesthetic with a summer vibe.",
+      price: 999.00,
+      category: "Lifestyle",
+      images: [`${baseUrl}/California/california.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Chill Pill Essential",
+      description: "Take a break with this relaxed-fit graphic tee.",
+      price: 849.00,
+      category: "Essential",
+      images: [`${baseUrl}/CHILL_PILL/main.png`],
+      isAiEnabled: false
+    },
+    {
+      name: "Crop Top Kitty",
+      description: "Playful cat illustration on a premium crop top cut.",
+      price: 799.00,
+      category: "Crop Top",
+      images: [`${baseUrl}/crop_top_KITTY/main.png`],
+      isAiEnabled: false
+    },
+    {
+      name: "Dino Vintage",
+      description: "Retro dinosaur illustration for a nostalgic look.",
+      price: 899.00,
+      category: "Vintage",
+      images: [`${baseUrl}/DINO/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Donald Brooklyn",
+      description: "Brooklyn-style urban design with a character twist.",
+      price: 1149.00,
+      category: "Urban",
+      images: [`${baseUrl}/DONALD_BROOKLYN/main.png`],
+      isAiEnabled: false
+    },
+    {
+      name: "Follow Your Dream",
+      description: "Inspirational typography on high-performance apparel.",
       price: 899.00,
       category: "Essential",
-      images: ["https://rukminim2.flixcart.com/image/832/832/xif0q/t-shirt/u/4/n/l-befearlessmaroon-cb-crazybee-tshirts-original-imahbrnrfm6zmfet.jpeg?q=70&crop=false"],
+      images: [`${baseUrl}/FOLLOW_YOUR_DREAM/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Just Psych",
+      description: "Psychological and abstract visual patterns.",
+      price: 1099.00,
+      category: "Abstract",
+      images: [`${baseUrl}/JUST_PSYCH/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Kathak Heritage",
+      description: "Celebrating traditional Indian dance with a modern fit.",
+      price: 1299.00,
+      category: "Heritage",
+      images: [`${baseUrl}/Kathak/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Looking of Ghost",
+      description: "Ethereal and spooky graphic for the bold.",
+      price: 999.00,
+      category: "Graphic",
+      images: [`${baseUrl}/Looking_of_ghost/main.png`],
+      isAiEnabled: false
+    },
+    {
+      name: "Minions Mania",
+      description: "Vibrant yellow fun in the signature WearWhatever style.",
+      price: 899.00,
+      category: "Graphic",
+      images: [`${baseUrl}/MINIONS/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Music Dance Funky",
+      description: "Feel the beat with this funky music-inspired tee.",
+      price: 949.00,
+      category: "Music",
+      images: [`${baseUrl}/Music_Dance_funky/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Obsession Premium",
+      description: "Deep aesthetic design for those with an eye for detail.",
+      price: 1199.00,
+      category: "Premium",
+      images: [`${baseUrl}/Obsession/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Paper Chaser",
+      description: "Urban streetwear for the focused and driven.",
+      price: 999.00,
+      category: "Urban",
+      images: [`${baseUrl}/Paper_Chaser/main.png`],
+      isAiEnabled: false
+    },
+    {
+      name: "Paris Aesthetic",
+      description: "European minimalist vibes on high-quality fabric.",
+      price: 1049.00,
+      category: "Lifestyle",
+      images: [`${baseUrl}/PARIS/main.png`],
+      isAiEnabled: false
+    },
+    {
+      name: "Peaky Blinder Original",
+      description: "By order of the WearWhatever crew.",
+      price: 1299.00,
+      category: "Peaky_Blinder",
+      images: [`${baseUrl}/PEAKY_BLINDER/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Porsche GT Edition",
+      description: "Automotive excellence meets streetwear performance.",
+      price: 1399.00,
+      category: "Automotive",
+      images: [`${baseUrl}/Porshe_gt/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Ride or Die",
+      description: "Tough aesthetic for the road-ready soul.",
+      price: 999.00,
+      category: "Graphic",
+      images: [`${baseUrl}/Ride/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Shinchan Retro",
+      description: "Everyone's favorite mischievous character in a new style.",
+      price: 899.00,
+      category: "Graphic",
+      images: [`${baseUrl}/Shinchan/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Space Edition: Infinity",
+      description: "Exploring the depths of the universe in comfort.",
+      price: 1199.00,
+      category: "Space_edition",
+      images: [`${baseUrl}/space_edition/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Super Cars Collection",
+      description: "High-octane design for car enthusiasts.",
+      price: 1249.00,
+      category: "Automotive",
+      images: [`${baseUrl}/SUPER_CARS/main.jpg`],
+      isAiEnabled: false
+    },
+    {
+      name: "Taylor Swift: The Eras",
+      description: "Inspired by the journey of an icon.",
+      price: 1399.00,
+      category: "Artist",
+      images: [`${baseUrl}/Taylor_Swift_edition/main.jpg`],
       isAiEnabled: false
     }
   ]
@@ -45,10 +255,10 @@ async function main() {
     const product = await prisma.product.create({
       data: p,
     })
-    console.log(`Created product with id: ${product.id}`)
+    console.log(`Created product: ${product.name} (id: ${product.id})`)
   }
 
-  console.log('Seeding finished.')
+  console.log('Seeding finished successfully.')
 }
 
 main()
