@@ -44,3 +44,19 @@ export const useCart = create<CartStore>()(
     { name: 'cart-storage' } // This saves the cart in the browser's LocalStorage!
   )
 );
+
+interface FilterStore {
+  searchQuery: string;
+  selectedCategory: string;
+  setSearchQuery: (query: string) => void;
+  setCategory: (category: string) => void;
+  clearFilters: () => void;
+}
+
+export const useFilters = create<FilterStore>((set) => ({
+  searchQuery: "",
+  selectedCategory: "All",
+  setSearchQuery: (query) => set({ searchQuery: query }),
+  setCategory: (category) => set({ selectedCategory: category }),
+  clearFilters: () => set({ searchQuery: "", selectedCategory: "All" }),
+}));

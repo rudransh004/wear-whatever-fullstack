@@ -1,8 +1,9 @@
 import prisma from "../lib/prisma";
-import ProductCard from "../components/ProductCard";
+import ProductGrid from "../components/ProductGrid";
+import FilterBar from "../components/FilterBar";
 
 export default async function Home() {
-  // Fetching products from Supabase
+  // 1. Fetching the full inventory from Supabase (Server-side)
   const products = await prisma.product.findMany({
     orderBy: { createdAt: 'desc' }
   });
@@ -19,14 +20,11 @@ export default async function Home() {
         </p>
       </section>
 
-      {/* The Product Grid Section */}
-      <section className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
+      {/* 2. The Interactive Filter UI */}
+      <FilterBar />
+
+      {/* 3. The Client-Side Grid (Handles real-time search/filter) */}
+      <ProductGrid initialProducts={products} />
     </main>
   );
 }
