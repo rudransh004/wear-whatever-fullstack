@@ -4,3 +4,4 @@ npx prisma db push
 npx prisma db seed
 
 npx next dev -H 0.0.0.0
+http://localhost:3000/admin?pass=wearwhatever2026
