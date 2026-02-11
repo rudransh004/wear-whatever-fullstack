@@ -1,6 +1,7 @@
 "use client";
 import { useCart } from "../lib/store";
 import Image from "next/image";
+import Link from "next/link"; // Added for navigation
 
 export default function CartSidebar() {
   const { items, isOpen, closeCart, removeItem } = useCart();
@@ -43,9 +44,13 @@ export default function CartSidebar() {
             <span className="text-zinc-500 font-mono uppercase text-xs tracking-widest">Total</span>
             <span className="text-2xl font-mono text-white">₹{items.reduce((acc, item) => acc + item.price * item.quantity, 0)}</span>
           </div>
-          <button className="w-full bg-white text-black py-4 font-black uppercase hover:bg-purple-600 hover:text-white transition-all tracking-tighter">
-            Checkout Now
-          </button>
+
+          {/* THE FIX: Wrapped button in Link and added onClick={closeCart} */}
+          <Link href="/checkout" onClick={closeCart} className="block w-full">
+            <button className="w-full bg-white text-black py-4 font-black uppercase hover:bg-purple-600 hover:text-white transition-all tracking-tighter">
+              Checkout Now
+            </button>
+          </Link>
         </div>
       </div>
     </div>

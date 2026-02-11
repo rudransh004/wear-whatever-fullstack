@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// Define what a Cart Item looks like
+// 1. Define what a Cart Item looks like
 interface CartItem {
   id: string;
   name: string;
@@ -10,6 +10,7 @@ interface CartItem {
   quantity: number;
 }
 
+// 2. Updated CartStore Interface
 interface CartStore {
   items: CartItem[];
   isOpen: boolean; // Controls if the sidebar is visible
@@ -17,6 +18,7 @@ interface CartStore {
   closeCart: () => void;
   addItem: (product: CartItem) => void;
   removeItem: (id: string) => void;
+  clearCart: () => void; // Added for post-checkout cleanup
 }
 
 export const useCart = create<CartStore>()(
@@ -40,17 +42,19 @@ export const useCart = create<CartStore>()(
       removeItem: (id) => set((state) => ({
         items: state.items.filter((item) => item.id !== id),
       })),
+      // THE FIX: Implementation to reset items to an empty array
+      clearCart: () => set({ items: [] }), 
     }),
-    { name: 'cart-storage' } // This saves the cart in the browser's LocalStorage!
+    { name: 'cart-storage' } // Saves the cart in the browser's LocalStorage!
   )
 );
 
+// 3. Filter Store for Search and Categories
 interface FilterStore {
   searchQuery: string;
   selectedCategory: string;
   setSearchQuery: (query: string) => void;
   setCategory: (category: string) => void;
-  clearFilters: () => void;
 }
 
 export const useFilters = create<FilterStore>((set) => ({
@@ -58,5 +62,4 @@ export const useFilters = create<FilterStore>((set) => ({
   selectedCategory: "All",
   setSearchQuery: (query) => set({ searchQuery: query }),
   setCategory: (category) => set({ selectedCategory: category }),
-  clearFilters: () => set({ searchQuery: "", selectedCategory: "All" }),
 }));

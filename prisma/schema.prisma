@@ -26,17 +26,31 @@ model Product {
 }
 
 model User {
-  id       String   @id @default(cuid())
-  email    String   @unique
-  name     String?
-  orders   Order[]
+  id     String  @id @default(cuid())
+  email  String  @unique
+  name   String?
+  orders Order[]
 }
 
 model Order {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  total     Float
-  status    String   @default("PENDING")
-  createdAt DateTime @default(now())
+  id            String      @id @default(cuid())
+  customerName  String
+  customerEmail String
+  address       String
+  totalAmount   Float
+  status        String      @default("Processing")
+  items         OrderItem[]
+  createdAt     DateTime    @default(now())
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id])
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  productId String
+  name      String
+  price     Float
+  quantity  Int
+  order     Order  @relation(fields: [orderId], references: [id])
 }

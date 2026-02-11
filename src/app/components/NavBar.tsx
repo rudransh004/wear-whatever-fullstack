@@ -24,8 +24,18 @@ export default function NavBar() {
         </Link>
 
         <div className="flex items-center gap-8">
-          <Link href="/" className="text-xs font-mono uppercase text-zinc-400 hover:text-white transition-colors">Shop</Link>
-          <Link href="/designer" className="text-xs font-mono uppercase text-purple-400 hover:text-purple-300 transition-colors">AI Designer</Link>
+          <Link href="/" className="text-xs font-mono uppercase text-zinc-400 hover:text-white transition-colors">
+            Shop
+          </Link>
+          
+          <Link href="/designer" className="text-xs font-mono uppercase text-purple-400 hover:text-purple-300 transition-colors">
+            AI Designer
+          </Link>
+
+          {/* New Orders Link added without disturbing existing layout */}
+          <Link href="/orders" className="text-xs font-mono uppercase text-zinc-400 hover:text-white transition-colors">
+            Orders
+          </Link>
           
           {/* 3. The Cart Button - Shows count only after mounting */}
           <button 
