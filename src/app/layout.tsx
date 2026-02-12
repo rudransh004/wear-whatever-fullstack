@@ -19,18 +19,14 @@ export const metadata: Metadata = {
   description: "Next-gen apparel venture",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
+        suppressHydrationWarning={true} // Add this line
       >
         <NavBar />
-        <CartSidebar /> 
         {children}
       </body>
     </html>
