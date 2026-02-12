@@ -1,10 +1,35 @@
 "use client";
+
 import { useCart } from "../lib/store";
 import Image from "next/image";
-import Link from "next/link"; // Added for navigation
+import { useRouter } from "next/navigation"; // Added for programmatic navigation
+import { useEffect, useState } from "react";
+import { createClient } from "../utils/supabase/client"; // Added to check auth status
 
 export default function CartSidebar() {
   const { items, isOpen, closeCart, removeItem } = useCart();
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const supabase = createClient();
+
+  // Check auth status whenever the sidebar opens
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    if (isOpen) checkUser();
+  }, [isOpen, supabase]);
+
+  const handleCheckout = () => {
+    closeCart(); // Close sidebar first
+    if (user) {
+      router.push("/checkout"); // Proceed if logged in
+    } else {
+      // Redirect to login with a query param to show a notice
+      router.push("/login?error=Please login to complete your order");
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -45,12 +70,14 @@ export default function CartSidebar() {
             <span className="text-2xl font-mono text-white">₹{items.reduce((acc, item) => acc + item.price * item.quantity, 0)}</span>
           </div>
 
-          {/* THE FIX: Wrapped button in Link and added onClick={closeCart} */}
-          <Link href="/checkout" onClick={closeCart} className="block w-full">
-            <button className="w-full bg-white text-black py-4 font-black uppercase hover:bg-purple-600 hover:text-white transition-all tracking-tighter">
-              Checkout Now
-            </button>
-          </Link>
+          {/* Dynamic Button with Auth Guard */}
+          <button 
+            onClick={handleCheckout}
+            disabled={items.length === 0}
+            className="w-full bg-white text-black py-4 font-black uppercase hover:bg-purple-600 hover:text-white transition-all tracking-tighter disabled:opacity-50"
+          >
+            {user ? "Checkout Now" : "Login to Checkout"}
+          </button>
         </div>
       </div>
     </div>
