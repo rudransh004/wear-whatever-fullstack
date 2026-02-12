@@ -59,3 +59,10 @@ export async function signup(formData: FormData) {
   revalidatePath('/', 'layout')
   redirect('/account')
 }
+
+export async function logout() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  revalidatePath('/', 'layout');
+  redirect('/'); // Send them back to the shop
+}
