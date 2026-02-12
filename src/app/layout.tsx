@@ -24,9 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
-        suppressHydrationWarning={true} // Add this line
+        suppressHydrationWarning={true}
       >
         <NavBar />
+        {/* THE FIX: Add the component here so it exists on every page */}
+        <CartSidebar /> 
         {children}
       </body>
     </html>
