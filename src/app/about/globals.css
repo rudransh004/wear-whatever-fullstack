@@ -1,0 +1,671 @@
+@import url("https://fonts.cdnfonts.com/css/newsflash-bb");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&display=swap");
+
+:root {
+    --base-100: #8e9487; /* Muted Sage */
+    --base-200: #1a1a1a; /* Deep Charcoal */
+    --base-300: #9381ff; /* Punchy Purple */
+    --base-400: #f0c808; /* Industrial Yellow */
+    --base-500: #bc4749; /* Brick Red */
+    --base-600: #d6d6d6; /* Concrete */
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+    background-color: var(--base-200);
+    font-family: "DM Sans", sans-serif;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Typography Enhancements */
+h1, h2, h3 {
+    text-transform: uppercase;
+    font-family: "Newsflash BB", sans-serif;
+    font-weight: 500;
+    line-height: 0.9;
+    text-wrap: balance;
+}
+
+.mono-tag {
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+    display: inline-block;
+    border: 1px solid currentColor;
+    padding: 0.2rem 0.75rem;
+    border-radius: 99px;
+}
+
+/* Section Mechanics */
+section {
+    position: relative;
+    width: 100%;
+    height: 100svh;
+    min-height: 100svh;
+    overflow: hidden;
+}
+
+section.four { height: 100svh; }
+section.three { min-height: 100svh; }
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 4rem;
+    display: flex;
+    transform: rotate(30deg);
+    transform-origin: bottom left;
+    will-change: transform;
+}
+
+.container .col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+.container .col.text-col {
+    padding-right: 4rem;
+}
+
+.container .col p {
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+    text-wrap: pretty;
+    max-width: 600px;
+}
+
+.container .col p + p {
+    margin-top: 1.5rem;
+}
+
+/* Elevated Image Aesthetics (Lookbook Style) */
+.image-wrapper {
+    position: relative;
+    width: 80%;
+    max-width: 450px;
+    aspect-ratio: 4/5;
+    margin: 0 auto;
+}
+
+.image-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid currentColor;
+    transform: translate(15px, 15px);
+    z-index: 0;
+    transition: transform 0.5s ease;
+}
+
+.image-wrapper:hover::before {
+    transform: translate(25px, 25px);
+}
+
+.container .col .img {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    background: #000;
+}
+
+.container .col .img:hover img {
+    transform: scale(1.08) rotate(-1deg);
+}
+
+/* Vector Accents */
+.accent-star {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    animation: spin 10s linear infinite;
+    opacity: 0.8;
+}
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+/* Color Themes & Specific Overrides */
+.one .container { background-color: var(--base-100); color: #000; }
+.two .container { background-color: var(--base-200); color: #fff; }
+.three .container { background-color: var(--base-300); color: #000; }
+.four .container { background-color: var(--base-400); color: #000; }
+.five .container { background-color: var(--base-500); color: #fff; }
+.six .container { background-color: var(--base-600); color: #000; }
+
+.one h1 { font-size: clamp(5rem, 14vw, 15rem); letter-spacing: -0.02em; }
+.one .hero-sub { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 2rem; border-top: 2px solid #000; padding-top: 2rem; }
+
+section:not(.one) h2 { font-size: clamp(3rem, 6vw, 6rem); margin-bottom: 2rem; margin-top: 1rem; }
+
+.two .text-col p, .five p { opacity: 0.9; }
+
+/* Responsive Adjustments */
+@media (max-width: 1000px) {
+    .container { flex-direction: column; padding: 2rem; }
+    .container .col.text-col { padding-right: 0; padding-bottom: 3rem; }
+    .image-wrapper { width: 90%; }
+    .one .hero-sub { flex-direction: column; gap: 2rem; }
+    section.four { height: auto; padding: 4rem 0; }
+}
+
+/* =========================================
+   --- SECTION 5 MANIFESTO STYLES --- 
+   ========================================= */
+
+.five .container {
+    align-items: center;
+    position: relative;
+}
+
+.manifesto-box {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 3.5rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s ease;
+    z-index: 10;
+}
+
+.manifesto-box:hover {
+    transform: translateY(-8px);
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.manifesto-highlight {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: #fff;
+    margin-bottom: 2rem !important;
+}
+
+.manifesto-highlight span {
+    color: var(--base-400); /* Industrial Yellow */
+    font-style: italic;
+}
+
+.manifesto-body {
+    font-size: 1.15rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+    margin-bottom: 2.5rem !important;
+}
+
+.manifesto-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 1.5rem;
+}
+
+.manifesto-footer strong {
+    display: block;
+    font-family: "DM Sans", sans-serif;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+    margin-bottom: 0.25rem;
+}
+
+.manifesto-footer span {
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.cross-icon {
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 1.5rem;
+    color: #fff;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.manifesto-box:hover .cross-icon {
+    transform: rotate(180deg) scale(1.2);
+    color: var(--base-400);
+}
+
+/* Rotating Interactive Badge */
+.manifesto-badge {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3rem;
+}
+
+.manifesto-badge svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: spin 12s linear infinite;
+}
+
+.badge-center-icon {
+    font-size: 2rem;
+    color: var(--base-400);
+}
+
+/* Floating Background Vector Animation */
+.float-anim {
+    animation: float 8s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(5deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@media (max-width: 1000px) {
+    .manifesto-box { padding: 2rem; }
+    .manifesto-badge { margin-top: 2rem; margin-bottom: 2rem; width: 100px; height: 100px; }
+}
+
+/* =========================================
+   --- FOOLPROOF FOOTER SPECIFIC STYLES --- 
+   ========================================= */
+
+/* Unlock the height for the final section so the massive text isn't hidden */
+section.six {
+    height: auto !important;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+}
+
+.six .container {
+    height: auto;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    padding: 4rem;
+    padding-bottom: 2rem;
+    gap: 1.5rem;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.footer-title {
+    font-family: "Newsflash BB", sans-serif;
+    font-size: clamp(3.5rem, 7vw, 7rem);
+    line-height: 0.85;
+    text-transform: uppercase;
+    color: #000;
+    margin: 0;
+}
+
+.footer-form {
+    display: flex;
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    padding: 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.footer-form input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0 1.5rem;
+    font-family: "DM Sans", sans-serif;
+    font-size: 1rem;
+    background: transparent;
+    color: #000;
+}
+
+.footer-form button {
+    background: #9381ff; /* Purple matching the vibe */
+    color: #fff;
+    border: none;
+    padding: 1.2rem 2.5rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: "DM Sans", sans-serif;
+    letter-spacing: 1px;
+    transition: opacity 0.3s;
+}
+
+.footer-form button:hover {
+    opacity: 0.8;
+}
+
+.spot-label {
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #000;
+    margin-top: 2rem;
+}
+
+.footer-banner {
+    display: flex;
+    width: 100%;
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+}
+
+.footer-banner-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    border-right: 2px solid #000;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #000;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: background-color 0.3s;
+}
+
+.footer-banner-item:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.footer-banner-item:last-child {
+    border-right: none;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.footer-col h4 {
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #000;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.footer-col a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    opacity: 0.75;
+    transition: opacity 0.3s;
+    text-transform: uppercase;
+}
+
+.footer-col a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* --- FOUNDERS / LEADERSHIP STYLES --- */
+.founders-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* Allows wrapping on very small screens */
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.founder-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.founder-avatar {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(0,0,0,0.1);
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+}
+
+.founder-profile:hover .founder-avatar {
+    filter: grayscale(0%);
+}
+
+.founder-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.founder-details {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.founder-name {
+    font-weight: 800;
+    color: #000;
+    font-size: 0.95rem;
+    white-space: nowrap; /* Prevents names from breaking into two lines */
+}
+
+.founder-role {
+    font-size: 0.7rem;
+    font-family: var(--font-geist-mono), monospace;
+    color: rgba(0,0,0,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.footer-bottom {
+    position: relative;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-top: 3rem;
+}
+
+/* Forces the marquee to break out of the padding and span the full screen width */
+.marquee-wrapper {
+    width: 100vw;
+    margin-left: -4rem; /* Counteracts the container's 4rem padding */
+    overflow: hidden;
+    display: flex;
+    white-space: nowrap;
+    position: relative;
+    z-index: 10;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+    display: inline-block;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+    padding-right: 2rem;
+    font-family: "Newsflash BB", sans-serif;
+    font-size: clamp(6rem, 15vw, 22rem); /* Massive responsive text */
+    line-height: 0.85;
+    color: #f0c808; /* Industrial Yellow */
+    text-transform: uppercase;
+    will-change: transform;
+    -webkit-text-stroke: 3px #000;
+}
+
+.copyright-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    margin-top: 2rem;
+    z-index: 20;
+    position: relative;
+}
+
+.copyright-bar span {
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #000;
+    opacity: 0.8;
+}
+
+.up-btn {
+    background: #fff;
+    border: none;
+    color: #000;
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.3s;
+}
+
+.up-btn:hover {
+    transform: translateY(-3px);
+}
+
+/* Mobile Adjustments for Footer */
+@media (max-width: 1000px) {
+    .six .container { padding: 2rem; gap: 2rem; }
+    .marquee-wrapper { margin-left: -2rem; } /* Counteracts mobile 2rem padding */
+    .footer-top { flex-direction: column; align-items: flex-start; gap: 2rem; }
+    .footer-form { max-width: 100%; }
+    .footer-banner { flex-wrap: wrap; }
+    .footer-banner-item { width: 50%; flex: 0 0 50%; border-bottom: 2px solid #000; }
+    .footer-banner-item:nth-child(2) { border-right: none; }
+    .footer-banner-item:nth-child(3), .footer-banner-item:nth-child(4) { border-bottom: none; }
+    .footer-links { flex-wrap: wrap; gap: 3rem; margin-top: 1rem; }
+    .footer-col { width: 40%; }
+}
+
+/* =========================================
+   --- SECTIONS 1-4 VECTOR & GRAPHIC STYLES --- 
+   ========================================= */
+
+/* Massive Hollow Outline Text */
+.outline-text {
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(0, 0, 0, 0.05);
+    font-family: "Newsflash BB", sans-serif;
+}
+.two .outline-text { -webkit-text-stroke: 2px rgba(255, 255, 255, 0.03); }
+.three .outline-text { -webkit-text-stroke: 2px rgba(0, 0, 0, 0.04); }
+.four .outline-text { -webkit-text-stroke: 2px rgba(0, 0, 0, 0.05); }
+
+/* Blueprint / Tech Grid Pattern */
+.bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+}
+
+/* Print Registration / Crop Marks */
+.crop-mark {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(0,0,0,0.2);
+    pointer-events: none;
+    z-index: 10;
+}
+.crop-top-left { top: 2rem; left: 2rem; border-right: none; border-bottom: none; }
+.crop-bottom-right { bottom: 2rem; right: 2rem; border-left: none; border-top: none; }
+
+/* Custom Animation Utility Classes */
+.spin-slow { animation: spin 20s linear infinite; }
+.spin-slow-reverse { animation: spin-reverse 25s linear infinite; }
+@keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+
+.float-delay { animation: float 8s ease-in-out infinite 2s; }
+.pulse-slow { animation: pulse 6s ease-in-out infinite; }
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+}
+/* =========================================
+   --- SECTION 1-4 INTERACTIVE VECTORS --- 
+   ========================================= */
+
+.pulse-slow {
+    animation: pulse-op 5s ease-in-out infinite;
+}
+
+@keyframes pulse-op {
+    0%, 100% { opacity: 0.05; transform: scale(1); }
+    50% { opacity: 0.2; transform: scale(1.05); }
+}
+
+.spin-reverse {
+    animation: spin 20s linear infinite reverse;
+}
+
+.float-delay {
+    animation: float 8s ease-in-out infinite -4s; /* -4s offset so it floats independently */
+}

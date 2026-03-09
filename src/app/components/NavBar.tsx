@@ -3,19 +3,18 @@
 import { useCart } from "../../lib/store";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { createClient } from "../../utils/supabase/client"; //
+import { createClient } from "../../utils/supabase/client";
 
 export default function NavBar() {
   const { openCart, items } = useCart();
   const [mounted, setMounted] = useState(false);
-  const [user, setUser] = useState<any>(null); //
+  const [user, setUser] = useState<any>(null);
   const supabase = createClient();
 
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
   useEffect(() => {
     setMounted(true);
-    // Fetch user status on mount
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
@@ -35,11 +34,14 @@ export default function NavBar() {
             Shop
           </Link>
           
+          <Link href="/about" className="text-[10px] font-mono uppercase text-zinc-400 hover:text-white transition-colors">
+            About
+          </Link>
+
           <Link href="/orders" className="text-[10px] font-mono uppercase text-zinc-400 hover:text-white transition-colors">
             Orders
           </Link>
 
-          {/* PREMIUM FEATURE: Dynamic Auth Link */}
           {mounted && (
             <Link 
               href={user ? "/account" : "/login"} 
