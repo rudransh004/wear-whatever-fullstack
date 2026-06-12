@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wear Whatever | AI-Powered E-Commerce",
+  title: "Wear Whatever | Intuitive Fashion",
   description: "Next-gen apparel venture",
 };
 

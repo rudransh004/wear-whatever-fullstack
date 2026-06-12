@@ -33,6 +33,11 @@ export default function NavBar() {
           <Link href="/" className="text-[10px] font-mono uppercase text-zinc-400 hover:text-white transition-colors">
             Shop
           </Link>
+
+          {/* --- NEW STUDIO LINK --- */}
+          <Link href="/studio" className="text-[10px] font-mono uppercase text-zinc-400 hover:text-white transition-colors">
+            Studio
+          </Link>
           
           <Link href="/about" className="text-[10px] font-mono uppercase text-zinc-400 hover:text-white transition-colors">
             About

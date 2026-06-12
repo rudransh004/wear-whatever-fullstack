@@ -144,7 +144,7 @@ export default function AboutPage() {
               <span className="mono-tag">[ CHAPTER 01 ] THE GENESIS</span>
               <h2>Ground Zero</h2>
               <p>
-                The industry was saturated with generic, low-effort fast fashion. Wear Whatever started when two founders, Rudransh Garg and Tarun Kumar Jain, looked around and realized they couldn't find a single brand that represented their actual aesthetic without a ridiculous markup.
+                The industry was saturated with generic, low-effort fast fashion. Wear Whatever started when two founders, Rudransh Garg and Rishindra Rao, looked around and realized they couldn't find a single brand that represented their actual aesthetic without a ridiculous markup.
               </p>
               <p>
                 What began as a late-night hustle in a first-semester dorm room quickly evolved into a full-scale obsession with apparel mechanics.

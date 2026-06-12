@@ -23,6 +23,13 @@ const nextConfig: NextConfig = {
         hostname: 'mqtaafuvnujrqcmuqvsx.supabase.co',
         pathname: '/storage/v1/object/public/**',
       },
+      // --- NEW COMFYUI CONFIGURATON ---
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '8188',
+        pathname: '/**',
+      },
     ],
   },
 };

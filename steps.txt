@@ -5,3 +5,7 @@ npx prisma db seed
 
 npx next dev -H 0.0.0.0
 http://localhost:3000/admin?pass=wearwhatever2026
+
+
+python main.py --fp32-vae --enable-cors-header
+python main.py --fp32-vae --enable-cors-header
