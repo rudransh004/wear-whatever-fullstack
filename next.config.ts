@@ -3,27 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      // 1. WILDCARD: Allows all secure HTTPS images (Supabase, Unsplash, Flipkart, etc.)
+      // This guarantees no images are blocked during development.
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
+        hostname: '**', 
       },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'rukminim2.flixcart.com', // Fixes the Runtime Error
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'mqtaafuvnujrqcmuqvsx.supabase.co',
-        pathname: '/storage/v1/object/public/**',
-      },
-      // --- NEW COMFYUI CONFIGURATON ---
+      // 2. LOCAL AI: Keeps your ComfyUI HTTP connection working perfectly
       {
         protocol: 'http',
         hostname: '127.0.0.1',
