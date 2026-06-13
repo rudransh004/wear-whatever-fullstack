@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Menu, X, ShoppingCart, User, Search, Wand2, Info } from 'lucide-react';
 import { useScrollSpy } from '../hooks/useScrollSpy';
 
-// Import your existing store and auth client (Adjust the path if necessary based on your folder structure)
+// Import your existing store and auth client
 import { useCart } from '../lib/store'; 
 import { createClient } from '../utils/supabase/client';
 
@@ -46,6 +46,22 @@ export default function Navbar() {
     }
   };
 
+  // NEW: Smart Scroll Interceptor for GSAP Pinned Sections
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    // Only intercept if we are on the homepage
+    if (window.location.pathname === '/' || window.location.pathname === '') {
+      e.preventDefault();
+      const target = document.getElementById(targetId);
+      if (target) {
+        // Calculate the exact pixel location in the document (bypassing GSAP padding issues)
+        const yOffset = target.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: yOffset, behavior: 'smooth' });
+      }
+    }
+    // Close the mobile menu automatically if it was open
+    setIsOpen(false);
+  };
+
   return (
     <nav className="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-white/10 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,23 +70,22 @@ export default function Navbar() {
           {/* 1. CUSTOM LOGO IMAGE */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/">
-              {/* Make sure your image is named logo.png and is inside the public folder */}
               <img src="/logo.png" alt="Wear Whatever Logo" className="h-8 md:h-10 w-auto object-contain cursor-pointer hover:opacity-80 transition-opacity" />
             </Link>
           </div>
 
           {/* 2. MAIN LINKS (Desktop) */}
           <div className="hidden md:flex items-center space-x-8 ml-10 flex-1">
-            <Link href="/#hero" className={`text-sm font-mono tracking-widest font-bold transition-colors ${activeSection === 'hero' ? 'text-[#f0c808]' : 'text-white hover:text-[#f0c808]'}`}>
+            {/* Added onClick handlers to intercept the #hash jumps */}
+            <Link href="/#hero" onClick={(e) => handleNavClick(e, 'hero')} className={`text-sm font-mono tracking-widest font-bold transition-colors ${activeSection === 'hero' ? 'text-[#f0c808]' : 'text-white hover:text-[#f0c808]'}`}>
               HOME
             </Link>
-            <Link href="/#shop" className={`text-sm font-mono tracking-widest font-bold transition-colors ${activeSection === 'shop' ? 'text-[#f0c808]' : 'text-white hover:text-[#f0c808]'}`}>
+            <Link href="/#shop" onClick={(e) => handleNavClick(e, 'shop')} className={`text-sm font-mono tracking-widest font-bold transition-colors ${activeSection === 'shop' ? 'text-[#f0c808]' : 'text-white hover:text-[#f0c808]'}`}>
               SHOP
             </Link>
             <Link href="/studio" className="flex items-center gap-2 text-sm font-mono tracking-widest font-bold text-white hover:text-[#9381ff] transition-colors">
               <Wand2 size={16} /> STUDIO
             </Link>
-            {/* Added About Page */}
             <Link href="/about" className="text-sm font-mono tracking-widest font-bold text-white hover:text-[#f0c808] transition-colors">
               ABOUT
             </Link>
@@ -148,8 +163,9 @@ export default function Navbar() {
           </form>
 
           <div className="flex flex-col space-y-5 mt-4">
-            <Link href="/#hero" onClick={() => setIsOpen(false)} className={`font-mono uppercase text-sm font-bold tracking-widest ${activeSection === 'hero' ? 'text-[#f0c808]' : 'text-white'}`}>HOME</Link>
-            <Link href="/#shop" onClick={() => setIsOpen(false)} className={`font-mono uppercase text-sm font-bold tracking-widest ${activeSection === 'shop' ? 'text-[#f0c808]' : 'text-white'}`}>SHOP</Link>
+            {/* Added onClick handlers to mobile menu as well */}
+            <Link href="/#hero" onClick={(e) => handleNavClick(e, 'hero')} className={`font-mono uppercase text-sm font-bold tracking-widest ${activeSection === 'hero' ? 'text-[#f0c808]' : 'text-white'}`}>HOME</Link>
+            <Link href="/#shop" onClick={(e) => handleNavClick(e, 'shop')} className={`font-mono uppercase text-sm font-bold tracking-widest ${activeSection === 'shop' ? 'text-[#f0c808]' : 'text-white'}`}>SHOP</Link>
             <Link href="/studio" onClick={() => setIsOpen(false)} className="text-[#9381ff] font-mono uppercase text-sm font-bold tracking-widest flex items-center gap-3">
               <Wand2 size={18}/> AI STUDIO
             </Link>

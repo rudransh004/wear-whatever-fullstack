@@ -15,6 +15,10 @@ async function main() {
   await prisma.product.deleteMany()
 
   const baseUrl = "https://mqtaafuvnujrqcmuqvsx.supabase.co/storage/v1/object/public/product-images/product-images";
+  
+  // High-quality placeholders so your carousel works immediately
+  const placeholder1 = "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800";
+  const placeholder2 = "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800";
 
   const products = [
     {
@@ -22,7 +26,8 @@ async function main() {
       description: "Heavyweight cotton with a futuristic neon aesthetic.",
       price: 1299.00,
       category: "Oversized",
-      images: [`${baseUrl}/Cyberpunk-Oversized-Tee/front.jpg`], // Ensure filename matches your upload
+      // FIXED: Added multiple images separated by commas
+      images: [`${baseUrl}/Cyberpunk-Oversized-Tee/front.jpg`, placeholder1, placeholder2], 
       isAiEnabled: false
     },
     {
@@ -30,7 +35,7 @@ async function main() {
       description: "Bold graphic statement tee from the WearWhatever legacy collection.",
       price: 999.00,
       category: "Graphic",
-      images: [`${baseUrl}/All_die_I_ll_alive/front.jpg`],
+      images: [`${baseUrl}/All_die_I_ll_alive/front.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -38,7 +43,7 @@ async function main() {
       description: "Custom illustrated anime aesthetic for the modern otaku.",
       price: 1099.00,
       category: "Anime",
-      images: [`${baseUrl}/Anime_girl/girl_anime_frame_4.png`],
+      images: [`${baseUrl}/Anime_girl/girl_anime_frame_4.png`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -46,7 +51,7 @@ async function main() {
       description: "Space-themed minimalist design exploring the digital frontier.",
       price: 1199.00,
       category: "Astronaut_Edition",
-      images: [`${baseUrl}/Astronaut_Edition/Astronuat_Black_2.png`],
+      images: [`${baseUrl}/Astronaut_Edition/Astronuat_Black_2.png`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -54,7 +59,7 @@ async function main() {
       description: "Streetwear inspired by the iconic style of Billie Eilish.",
       price: 1299.00,
       category: "Artist",
-      images: [`${baseUrl}/BILLIE_EILISH/main.jpg`],
+      images: [`${baseUrl}/BILLIE_EILISH/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -62,7 +67,7 @@ async function main() {
       description: "Unique character design from the BOBB collection.",
       price: 899.00,
       category: "Graphic",
-      images: [`${baseUrl}/BOBB/main.jpg`],
+      images: [`${baseUrl}/BOBB/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -70,7 +75,7 @@ async function main() {
       description: "Sleek boy anime character illustration on premium fabric.",
       price: 1099.00,
       category: "Anime",
-      images: [`${baseUrl}/Boy_Anime/main.jpg`],
+      images: [`${baseUrl}/Boy_Anime/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -78,7 +83,7 @@ async function main() {
       description: "Modern typography and abstract elements.",
       price: 899.00,
       category: "Minimalist",
-      images: [`${baseUrl}/BTH/main.jpg`],
+      images: [`${baseUrl}/BTH/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -86,7 +91,7 @@ async function main() {
       description: "West-coast inspired aesthetic with a summer vibe.",
       price: 999.00,
       category: "Lifestyle",
-      images: [`${baseUrl}/California/california.jpg`],
+      images: [`${baseUrl}/California/california.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -94,7 +99,7 @@ async function main() {
       description: "Take a break with this relaxed-fit graphic tee.",
       price: 849.00,
       category: "Essential",
-      images: [`${baseUrl}/CHILL_PILL/main.png`],
+      images: [`${baseUrl}/CHILL_PILL/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -102,7 +107,7 @@ async function main() {
       description: "Playful cat illustration on a premium crop top cut.",
       price: 799.00,
       category: "Crop Top",
-      images: [`${baseUrl}/crop_top_KITTY/main.png`],
+      images: [`${baseUrl}/crop_top_KITTY/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -110,7 +115,7 @@ async function main() {
       description: "Retro dinosaur illustration for a nostalgic look.",
       price: 899.00,
       category: "Vintage",
-      images: [`${baseUrl}/DINO/main.jpg`],
+      images: [`${baseUrl}/DINO/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -118,7 +123,7 @@ async function main() {
       description: "Brooklyn-style urban design with a character twist.",
       price: 1149.00,
       category: "Urban",
-      images: [`${baseUrl}/DONALD_BROOKLYN/main.png`],
+      images: [`${baseUrl}/DONALD_BROOKLYN/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -126,7 +131,7 @@ async function main() {
       description: "Inspirational typography on high-performance apparel.",
       price: 899.00,
       category: "Essential",
-      images: [`${baseUrl}/FOLLOW_YOUR_DREAM/main.jpg`],
+      images: [`${baseUrl}/FOLLOW_YOUR_DREAM/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -134,7 +139,7 @@ async function main() {
       description: "Psychological and abstract visual patterns.",
       price: 1099.00,
       category: "Abstract",
-      images: [`${baseUrl}/JUST_PSYCH/main.jpg`],
+      images: [`${baseUrl}/JUST_PSYCH/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -142,7 +147,7 @@ async function main() {
       description: "Celebrating traditional Indian dance with a modern fit.",
       price: 1299.00,
       category: "Heritage",
-      images: [`${baseUrl}/Kathak/main.jpg`],
+      images: [`${baseUrl}/Kathak/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -150,7 +155,7 @@ async function main() {
       description: "Ethereal and spooky graphic for the bold.",
       price: 999.00,
       category: "Graphic",
-      images: [`${baseUrl}/Looking_of_ghost/main.png`],
+      images: [`${baseUrl}/Looking_of_ghost/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -158,7 +163,7 @@ async function main() {
       description: "Vibrant yellow fun in the signature WearWhatever style.",
       price: 899.00,
       category: "Graphic",
-      images: [`${baseUrl}/MINIONS/main.jpg`],
+      images: [`${baseUrl}/MINIONS/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -166,7 +171,7 @@ async function main() {
       description: "Feel the beat with this funky music-inspired tee.",
       price: 949.00,
       category: "Music",
-      images: [`${baseUrl}/Music_Dance_funky/main.jpg`],
+      images: [`${baseUrl}/Music_Dance_funky/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -174,7 +179,7 @@ async function main() {
       description: "Deep aesthetic design for those with an eye for detail.",
       price: 1199.00,
       category: "Premium",
-      images: [`${baseUrl}/Obsession/main.jpg`],
+      images: [`${baseUrl}/Obsession/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -182,7 +187,7 @@ async function main() {
       description: "Urban streetwear for the focused and driven.",
       price: 999.00,
       category: "Urban",
-      images: [`${baseUrl}/Paper_Chaser/main.png`],
+      images: [`${baseUrl}/Paper_Chaser/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -190,7 +195,7 @@ async function main() {
       description: "European minimalist vibes on high-quality fabric.",
       price: 1049.00,
       category: "Lifestyle",
-      images: [`${baseUrl}/PARIS/main.png`],
+      images: [`${baseUrl}/PARIS/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -198,7 +203,7 @@ async function main() {
       description: "By order of the WearWhatever crew.",
       price: 1299.00,
       category: "Peaky_Blinder",
-      images: [`${baseUrl}/PEAKY_BLINDER/main.jpg`],
+      images: [`${baseUrl}/PEAKY_BLINDER/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -206,7 +211,7 @@ async function main() {
       description: "Automotive excellence meets streetwear performance.",
       price: 1399.00,
       category: "Automotive",
-      images: [`${baseUrl}/Porshe_gt/main.jpg`],
+      images: [`${baseUrl}/Porshe_gt/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -214,7 +219,7 @@ async function main() {
       description: "Tough aesthetic for the road-ready soul.",
       price: 999.00,
       category: "Graphic",
-      images: [`${baseUrl}/Ride/main.jpg`],
+      images: [`${baseUrl}/Ride/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -222,7 +227,7 @@ async function main() {
       description: "Everyone's favorite mischievous character in a new style.",
       price: 899.00,
       category: "Graphic",
-      images: [`${baseUrl}/Shinchan/main.jpg`],
+      images: [`${baseUrl}/Shinchan/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -230,7 +235,7 @@ async function main() {
       description: "Exploring the depths of the universe in comfort.",
       price: 1199.00,
       category: "Space_edition",
-      images: [`${baseUrl}/space_edition/main.jpg`],
+      images: [`${baseUrl}/space_edition/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -238,7 +243,7 @@ async function main() {
       description: "High-octane design for car enthusiasts.",
       price: 1249.00,
       category: "Automotive",
-      images: [`${baseUrl}/SUPER_CARS/main.jpg`],
+      images: [`${baseUrl}/SUPER_CARS/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     },
     {
@@ -246,7 +251,7 @@ async function main() {
       description: "Inspired by the journey of an icon.",
       price: 1399.00,
       category: "Artist",
-      images: [`${baseUrl}/Taylor_Swift_edition/main.jpg`],
+      images: [`${baseUrl}/Taylor_Swift_edition/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
     }
   ]

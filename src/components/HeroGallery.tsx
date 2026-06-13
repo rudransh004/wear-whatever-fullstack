@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,61 +7,76 @@ import WatchMenu from './WatchMenu';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// 10 High-Quality images per category
 const galleryData = [
-  // 1. Supreme Edition
-  [
-    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800',
-    'https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800',
-    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800',
-    'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800', 'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800',
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800'
-  ],
-  // 2. Epic Thread
-  [
-    'https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800', 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=800',
-    'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800', 'https://images.unsplash.com/photo-1489987707023-afc82478163a?q=80&w=800',
-    'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800',
-    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800',
-    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800'
-  ],
-  // 3. WearWhatever Premium
-  [
-    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800',
-    'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800',
-    'https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800',
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800',
-    'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800'
-  ],
-  // 4. All Products
-  [
-    'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800', 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=800',
-    'https://images.unsplash.com/photo-1489987707023-afc82478163a?q=80&w=800', 'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800',
-    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800',
-    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800',
-    'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800'
-  ],
-  // 5. Special Customs
-  [
-    'https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800',
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800',
-    'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800',
-    'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=800', 'https://images.unsplash.com/photo-1489987707023-afc82478163a?q=80&w=800',
-    'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800', 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800'
-  ],
-  // 6. End of Season Sale
-  [
-    'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800',
-    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800',
-    'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800',
-    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800',
-    'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800', 'https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800'
-  ]
+  ['https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800', 'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800'],
+  ['https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800', 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=800', 'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800', 'https://images.unsplash.com/photo-1489987707023-afc82478163a?q=80&w=800', 'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800'],
+  ['https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800', 'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800', 'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800'],
+  ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800', 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=800', 'https://images.unsplash.com/photo-1489987707023-afc82478163a?q=80&w=800', 'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800', 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800', 'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800'],
+  ['https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800', 'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800', 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=800', 'https://images.unsplash.com/photo-1489987707023-afc82478163a?q=80&w=800', 'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800', 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800'],
+  ['https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800', 'https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800']
+];
+
+// =========================================================
+// 🎬 ENHANCED LIGHTING PROFILES
+// =========================================================
+const studioLighting = [
+  { // 0: Supreme Edition
+    bg: "#050000",
+    keyLight: "#ff0000",
+    rimLight: "#00ffff",
+    gridColor: "rgba(255, 0, 0, 0.5)",
+    watermark: "SUPREME"
+  },
+  { // 1: Epic Thread
+    bg: "#000300",
+    keyLight: "#39ff14",
+    rimLight: "#ff00ff",
+    gridColor: "rgba(57, 255, 20, 0.5)",
+    watermark: "THREAD"
+  },
+  { // 2: WearWhatever Premium
+    bg: "#020202",
+    keyLight: "#f0c808",
+    rimLight: "#6b21a8",
+    gridColor: "rgba(240, 200, 8, 0.4)",
+    watermark: "THE VOID"
+  },
+  { // 3: All Products
+    bg: "#030005",
+    keyLight: "#ff007f",
+    rimLight: "#00e5ff",
+    gridColor: "rgba(255, 0, 127, 0.5)",
+    watermark: "ARCHIVE"
+  },
+  { // 4: Special Customs
+    bg: "#000105",
+    keyLight: "#ffd700",
+    rimLight: "#ff007a",
+    gridColor: "rgba(255, 215, 0, 0.5)",
+    watermark: "CUSTOM"
+  },
+  { // 5: End of Season Sale
+    bg: "#050100",
+    keyLight: "#ff4500",
+    rimLight: "#00ffff",
+    gridColor: "rgba(255, 69, 0, 0.5)",
+    watermark: "ON SALE"
+  }
 ];
 
 export default function HeroGallery({ activeIndex, setActiveIndex }: { activeIndex: number, setActiveIndex: (idx: number) => void }) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  
+  const light = studioLighting[activeIndex] || studioLighting[2];
+
   useEffect(() => {
     const wrapper = wrapperRef.current;
     const track = scrollContainerRef.current;
@@ -75,6 +90,7 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
         ease: "none",
         scrollTrigger: {
           trigger: wrapper,
+          start: "top top", // Forces precise pinning
           pin: true,
           pinSpacing: true,
           scrub: 1,
@@ -96,15 +112,12 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
             scrub: true,
           }
         })
-        // FIXED: Reduced scale from 1.25 to 1.15, and reduced Y rise from -80 to -30
-        // This prevents the image from slamming into the top of the screen
         .to(innerImage, {
            scale: 1.15,
            y: -30, 
            rotation: gsap.utils.random(-3, 3),
            ease: "power1.inOut"
         })
-        // FIXED: Reduced drop distance and tilt on exit
         .to(innerImage, {
            scale: 0.85,
            y: 30, 
@@ -121,29 +134,136 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
   const activeImages = galleryData[activeIndex] || galleryData[0];
 
   return (
-    <div ref={wrapperRef} className="w-full h-screen bg-[#0a0a0a] overflow-hidden flex items-center relative z-20">
+    // FIX 1: z-[40] and strictly opaque bg-[#020202]. 
+    // This physically blocks the fixed "WEAR WHATEVER" top hero text from bleeding through.
+    <div ref={wrapperRef} className="relative w-full h-[100vh] overflow-hidden flex items-center bg-[#020202] z-[40]" style={{ perspective: "2000px" }}>
       
-      {/* FIXED: Reduced padding bottom (pb-28) to center the smaller cards better */}
-      <div ref={scrollContainerRef} className="flex flex-nowrap items-center pl-[15vw] pr-[50vw] h-full w-max pt-10 pb-28">
+      {/* ========================================================= */}
+      {/* 🎬 DYNAMIC STUDIO BACKGROUND ELEMENTS                       */}
+      {/* ========================================================= */}
+      
+      <motion.div 
+        animate={{ backgroundColor: light.bg }} 
+        transition={{ duration: 1.5, ease: "easeInOut" }}
+        className="absolute inset-0 z-0 flex items-center justify-center overflow-hidden"
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        
+        {/* 3D BACKGROUND TYPOGRAPHY (Scaled down so it fits perfectly on all screens) */}
+        <div className="absolute top-[18%] md:top-[20%] w-full flex justify-center items-center pointer-events-none" style={{ transform: "translateZ(-400px)" }}>
+          <motion.h1 
+            key={light.watermark}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ 
+              opacity: 0.8, 
+              y: 0, 
+              color: "transparent",
+              textShadow: `0px 0px 40px ${light.keyLight}, 0px 0px 10px ${light.rimLight}` 
+            }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 1.2 }}
+            className="text-[14vw] md:text-[12vw] font-black uppercase [-webkit-text-stroke:2px_rgba(255,255,255,0.6)] whitespace-nowrap tracking-tighter"
+          >
+            {light.watermark}
+          </motion.h1>
+        </div>
+
+        {/* VERTICAL NEON LIGHT PILLARS */}
+        {[...Array(7)].map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{ 
+              backgroundColor: i % 2 === 0 ? light.keyLight : light.rimLight, 
+              boxShadow: `0 0 50px ${i % 2 === 0 ? light.keyLight : light.rimLight}` 
+            }}
+            transition={{ duration: 1.5 }}
+            className="absolute top-[-50vh] w-[2px] md:w-2 h-[200vh] opacity-30 pointer-events-none"
+            style={{
+              left: `${10 + i * 13.3}%`,
+              transform: "translateZ(-300px)", 
+            }}
+          />
+        ))}
+
+        {/* GLOWING REFLECTIVE STAGE FLOOR */}
+        <div className="absolute bottom-[-10vh] w-[150vw] left-[-25vw] h-[50vh] origin-bottom pointer-events-none" style={{ transform: "rotateX(70deg) translateZ(-200px)" }}>
+          <motion.div 
+            animate={{ 
+              background: `
+                linear-gradient(to top, #000000 20%, transparent 100%),
+                radial-gradient(ellipse at top, ${light.keyLight} 0%, transparent 60%),
+                linear-gradient(to right, ${light.gridColor} 2px, transparent 2px),
+                linear-gradient(to bottom, ${light.gridColor} 2px, transparent 2px)
+              ` 
+            }}
+            transition={{ duration: 1.5 }}
+            className="w-full h-full bg-[size:100%_100%,_100%_100%,_8rem_8rem,_8rem_8rem] opacity-70" 
+          />
+        </div>
+
+        {/* FLOATING AMBIENT PARTICLES */}
+        {isMounted && [...Array(20)].map((_, i) => (
+          <motion.div
+            key={`dust-${i}`}
+            animate={{ 
+              y: [0, -150, 0],
+              opacity: [0.1, 0.5, 0.1],
+            }}
+            transition={{ 
+              duration: Math.random() * 6 + 4, 
+              repeat: Infinity, 
+              ease: "easeInOut",
+              delay: Math.random() * 3 
+            }}
+            className="absolute rounded-full pointer-events-none mix-blend-screen"
+            style={{
+              width: Math.random() * 4 + 2 + 'px',
+              height: Math.random() * 4 + 2 + 'px',
+              backgroundColor: i % 3 === 0 ? "white" : "transparent",
+              boxShadow: i % 3 !== 0 ? `0 0 10px 2px #f0c808` : "none",
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              transform: `translateZ(${-Math.random() * 500}px)`, 
+            }}
+          />
+        ))}
+
+        {/* VOLUMETRIC CENTER GLOW */}
+        <motion.div 
+          animate={{ background: `radial-gradient(circle, ${light.keyLight} 0%, transparent 60%)` }}
+          transition={{ duration: 1.5 }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[80vh] opacity-30 mix-blend-screen pointer-events-none"
+        />
+
+      </motion.div>
+
+      {/* Cinematic Vignette */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#000000_100%)] pointer-events-none z-10 opacity-90"></div>
+      
+      {/* ========================================================= */}
+      {/* 🎬 FOREGROUND GALLERY TRACK                                 */}
+      {/* ========================================================= */}
+
+      {/* FIX 2: Reduced bottom padding (pb-[12vh]) to perfectly center the cards between the navbar and watch dial */}
+      <div ref={scrollContainerRef} className="relative z-30 flex flex-nowrap items-center pl-[15vw] pr-[50vw] h-full w-max pt-10 pb-[12vh]">
         
         <AnimatePresence mode="popLayout">
           {activeImages.map((img, idx) => (
             <motion.div 
                key={`${activeIndex}-${idx}`} 
-               // FIXED: Reduced Framer Motion Y distance so entry animation isn't so aggressive
                initial={{ opacity: 0, y: 100, scale: 0.5, filter: "blur(10px)" }}
                animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
                exit={{ opacity: 0, y: -100, scale: 0.5, filter: "blur(10px)" }}
                transition={{ duration: 0.6, ease: "easeOut", delay: idx * 0.05 }} 
-               // FIXED: Shrunk the base card size from h-[55vh] down to h-[45vh]
-               className="gallery-card w-[60vw] md:w-[28vw] h-[40vh] md:h-[45vh] flex-shrink-0 mx-8 flex items-center justify-center group"
+               // FIX 3: Safe Card Breakpoints (w-[55vw] md:w-[30vw] lg:w-[24vw]) to prevent them from hitting the top of laptops
+               className="gallery-card w-[55vw] md:w-[30vw] lg:w-[24vw] h-[35vh] md:h-[40vh] lg:h-[45vh] flex-shrink-0 mx-6 md:mx-10 flex items-center justify-center group"
             >
               <div 
                 className="card-inner w-full h-full relative"
                 style={{ transform: `scale(0.85) translateY(40px) rotate(${idx % 2 === 0 ? 12 : -12}deg)` }}
               >
-                <div className="absolute inset-0 bg-zinc-900 border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden flex items-center justify-center">
-                  <img src={img} alt={`Lookbook ${idx}`} className="object-cover w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-zinc-900 border-2 border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden flex items-center justify-center">
+                  <img src={img} alt={`Lookbook ${idx}`} className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               </div>
             </motion.div>
@@ -152,6 +272,7 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
 
       </div>
 
+      {/* THE WATCH MENU */}
       <WatchMenu activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
 
     </div>

@@ -3,6 +3,8 @@ import ProductGrid from "../components/ProductGrid";
 import FilterBar from "../components/FilterBar";
 import Navbar from "../components/NavBar";
 import InteractiveHero from "../components/InteractiveHero";
+import HoverTitle from "../components/HoverTitle"; // Import the new animated title
+import AnimatedSubtitle from "../components/AnimatedSubtitle";
 import Link from "next/link";
 
 export default async function Home() {
@@ -25,15 +27,7 @@ export default async function Home() {
           width: 200%;
           animation: marquee 20s linear infinite;
         }
-        .text-stroke-outline {
-          -webkit-text-stroke: 2px rgba(255, 255, 255, 0.8);
-          color: transparent;
-        }
-        .text-stroke-hover:hover {
-          color: #f0c808;
-          -webkit-text-stroke: 0px;
-          text-shadow: 0 0 40px rgba(240,200,8,0.4);
-        }
+        /* Removed the old .text-stroke-hover class because React handles it now! */
       `}} />
 
       {/* EDITORIAL HERO SECTION */}
@@ -48,7 +42,7 @@ export default async function Home() {
            <div className="mb-6 flex items-center gap-4">
              <div className="w-8 h-[1px] bg-[#f0c808]"></div>
              <p className="text-[10px] md:text-xs text-[#f0c808] font-mono uppercase tracking-[0.4em]">
-               The Full-Stack Venture Redefined
+               ARCHITECTED FOR THE INDIVIDUAL
              </p>
            </div>
 
@@ -56,9 +50,8 @@ export default async function Home() {
               <h1 className="text-[clamp(4rem,14vw,12rem)] font-black tracking-tighter leading-[0.85] uppercase text-white drop-shadow-2xl text-left">
                 WEAR
               </h1>
-              <h1 className="text-[clamp(4rem,14vw,12rem)] font-black tracking-tighter leading-[0.85] uppercase text-stroke-outline italic drop-shadow-2xl text-stroke-hover transition-all duration-500 cursor-crosshair md:text-right">
-                WHATEVER
-              </h1>
+              {/* Inject the smart Hover component right here */}
+              <HoverTitle />
            </div>
 
            <div className="flex flex-col sm:flex-row gap-5 w-full max-w-md mt-16 z-20">
