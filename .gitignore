@@ -45,3 +45,7 @@ next-env.d.ts
 
 # Ignore local AI Engine
 ComfyUI/
+
+
+# Google OAuth Secrets
+client_secret_*.json
