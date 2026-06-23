@@ -10,7 +10,6 @@ export default async function AdminLoginPage({
   const error = params.error;
 
   return (
-    // FIX: Added pt-16 md:pt-20 and changed min-h-screen to flex-1 to fit in global layout
     <div className="flex-1 pt-16 md:pt-20 bg-[#020202] flex items-center justify-center p-6 relative overflow-hidden min-h-[80vh]">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none z-0"></div>
 
@@ -26,9 +25,17 @@ export default async function AdminLoginPage({
           Wear Whatever // Employee Terminal
         </p>
 
-        {error && (
+        {/* STATE A: Employee typed the wrong code */}
+        {error === 'Invalid_Code' && (
           <div className="bg-red-500/10 border border-red-500/30 p-3 mb-6 text-red-500 font-mono text-[10px] uppercase tracking-widest text-center">
-            ACCESS DENIED. INVALID CODE.
+            ACCESS DENIED. INVALID CLEARANCE CODE.
+          </div>
+        )}
+
+        {/* STATE B: Vercel Cloud Hypervisor failed to bind the variable */}
+        {error === 'Server_Config_Missing' && (
+          <div className="bg-orange-500/10 border border-orange-500/30 p-3 mb-6 text-orange-400 font-mono text-[10px] uppercase tracking-widest text-center">
+            SYSTEM FAULT: CLOUD KEY 'ADMIN_PASSCODE' UNBOUND.
           </div>
         )}
 
