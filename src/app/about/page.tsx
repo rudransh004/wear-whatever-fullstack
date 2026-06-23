@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react"; 
 import { ReactLenis } from "lenis/react";
+// @ts-ignore: side-effect import for CSS
 import "./about.css";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -344,6 +345,16 @@ export default function AboutPage() {
                   <div className="founder-details">
                     <span className="founder-name">Rishindera Rao</span>
                     <span className="founder-role">CTO</span>
+                  </div>
+                </div>
+
+                <div className="founder-profile">
+                  <div className="founder-avatar">
+                    <Image src="/suhani.jpeg" alt="Suhani Sadh" width={40} height={40} />
+                  </div>
+                  <div className="founder-details">
+                    <span className="founder-name">Suhani Sadh</span>
+                    <span className="founder-role">Operations Manager</span>
                   </div>
                 </div>
               </div>
