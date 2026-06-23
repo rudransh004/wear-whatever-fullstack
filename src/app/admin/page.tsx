@@ -1,13 +1,13 @@
 import { prisma } from "../../lib/prisma";
 import StatusUpdateButton from "../../components/StatusUpdateButton";
 import DeleteOrderButton from "../../components/DeleteOrderButton";
-import { DollarSign, PackageOpen, Truck, TrendingUp } from "lucide-react";
+import { DollarSign, PackageOpen, TrendingUp } from "lucide-react";
 
 export default async function AdminDashboard() {
-  // FIX: Removed the non-existent createdAt sorting to guarantee zero Prisma runtime crashes
   const orders = await prisma.order.findMany({
     include: { items: true },
-    take: 10 
+    orderBy: { createdAt: "desc" },
+    take: 10
   });
 
   const totalRevenue = orders.reduce((acc, order) => acc + order.totalAmount, 0);
