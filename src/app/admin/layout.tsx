@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { adminLogout } from "./actions";
 import { LayoutDashboard, ShoppingCart, Package, Users, LogOut } from "lucide-react";
 
+export const dynamic='force-dynamic';
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
   const isAdmin = cookieStore.get('admin_session');
