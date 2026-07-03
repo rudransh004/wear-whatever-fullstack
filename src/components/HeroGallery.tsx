@@ -8,15 +8,87 @@ import WatchMenu from './WatchMenu';
 gsap.registerPlugin(ScrollTrigger);
 
 // 10 High-Quality images per category
+// Optimized Local Category Arrays (Add up to 10 images per category array)
 const galleryData = [
-  ['https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800', 'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800'],
-  ['https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800', 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=800', 'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800', 'https://images.unsplash.com/photo-1489987707023-afc82478163a?q=80&w=800', 'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800'],
-  ['https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800', 'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800', 'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800'],
-  ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800', 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=800', 'https://images.unsplash.com/photo-1489987707023-afc82478163a?q=80&w=800', 'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800', 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800', 'https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800'],
-  ['https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800', 'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800', 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=800', 'https://images.unsplash.com/photo-1489987707023-afc82478163a?q=80&w=800', 'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800', 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800'],
-  ['https://images.unsplash.com/photo-1618517351616-38fb9c52e047?q=80&w=800', 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=800', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800', 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800', 'https://images.unsplash.com/photo-1550639524-a6f58345a2ca?q=80&w=800', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800', 'https://images.unsplash.com/photo-1434389673869-e3fb63d5964f?q=80&w=800']
+  // Index 0: Category 1 Images
+  [
+    '/gallery/cat0-1.png',
+    '/gallery/cat0-2.png',
+    '/gallery/cat0-3.jpg',
+    '/gallery/cat0-4.png',
+    '/gallery/cat0-5.png',
+    '/gallery/cat0-6.png',
+    '/gallery/cat0-7.png',
+    '/gallery/cat0-8.png',
+    '/gallery/cat0-9.png',
+    '/gallery/cat0-10.png',
+  ],
+  // Index 1: Category 2 Images
+  [
+    '/gallery/cat1-1.png',
+    '/gallery/cat1-2.png',
+    '/gallery/cat1-3.png',
+    '/gallery/cat1-4.png',
+    '/gallery/cat1-5.png',
+    '/gallery/cat1-6.png',
+    '/gallery/cat1-7.png',
+    '/gallery/cat1-8.png',
+    '/gallery/cat1-9.png',
+    '/gallery/cat1-10.png',
+  ],
+  // Index 2: Category 3 Images
+  [
+    '/gallery/cat2-1.png',
+    '/gallery/cat2-2.png',
+    '/gallery/cat2-3.jpg',
+    '/gallery/cat2-4.png',
+    '/gallery/cat2-5.png',
+    '/gallery/cat2-6.png',
+    '/gallery/cat2-7.png',
+    '/gallery/cat2-8.png',
+    '/gallery/cat2-9.png',
+    '/gallery/cat2-10.png',
+  ],
+  // Index 3: Category 4 Images
+  [
+    '/gallery/cat3-1.png',
+    '/gallery/cat3-2.png',
+    '/gallery/cat3-3.png',
+    '/gallery/cat3-4.png',
+    '/gallery/cat3-5.png',
+    '/gallery/cat3-6.png',
+    '/gallery/cat3-7.png',
+    '/gallery/cat3-8.png',
+    '/gallery/cat3-9.png',
+    '/gallery/cat3-10.png',
+  ],
+  // Index 4: Category 5 Images
+  [
+    '/gallery/cat4-1.png',
+    '/gallery/cat4-2.png',
+    '/gallery/cat4-3.png',
+    '/gallery/cat4-4.png',
+    '/gallery/cat4-5.png',
+    '/gallery/cat4-6.png',
+    '/gallery/cat4-7.png',
+    '/gallery/cat4-8.png',
+    '/gallery/cat4-9.png',
+    '/gallery/cat4-10.png',
+  ],
+  // Index 5: Category 6 Images
+  [
+    '/gallery/cat5-1.png',
+    '/gallery/cat5-2.png',
+    '/gallery/cat5-3.png',
+    '/gallery/cat5-4.png',
+    '/gallery/cat5-5.png',
+    '/gallery/cat5-6.png',
+    '/gallery/cat5-7.png',
+    '/gallery/cat5-8.png',
+    '/gallery/cat5-9.png',
+    '/gallery/cat5-10.png',
+  ],
 ];
-
 // =========================================================
 // 🎬 ENHANCED LIGHTING PROFILES
 // =========================================================

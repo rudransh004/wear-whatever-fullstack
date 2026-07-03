@@ -2,8 +2,8 @@
 import { motion } from 'framer-motion';
 
 const options = [
-  "Supreme Edition", "Epic Thread", "WearWhatever Premium", 
-  "All Products", "Special Customs", "End of Season Sale"
+  "The Power Sync", "Quiet Luxury", "Urban Eclipse",
+  "Acid & Edge", "Cyber-Sport", "Off-Duty Contour"
 ];
 
 const angles = [-75, -45, -22, 22, 45, 75]; 

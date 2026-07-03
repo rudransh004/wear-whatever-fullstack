@@ -40,20 +40,20 @@ export default async function Home() {
 
       <section id="shop" className="w-full bg-[#0a0a0a] pt-20 pb-24 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6 border-b border-white/10 pb-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6 border-b border-white/10 pb-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
                 <p className="text-xs font-mono text-green-500 uppercase tracking-widest">Live Inventory</p>
               </div>
-              <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter">Current Drop</h2>
+              <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter">Current Drop</h2>
             </div>
             <div className="w-full md:w-auto">
               <FilterBar />
             </div>
           </div>
           
-          <div className="min-h-[50vh] mt-8">
+          <div className="min-h-[50vh] mt-10">
             <ProductGrid initialProducts={products} />
           </div>
         </div>

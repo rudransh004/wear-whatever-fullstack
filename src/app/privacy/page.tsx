@@ -74,10 +74,6 @@ export default function PrivacyPolicyPage() {
               <p>As described above, we may use your Personal Information to provide you with targeted advertisements or marketing communications we believe may be of interest to you.</p>
               <ul className="list-disc pl-5 space-y-2">
                 <li>We use Google Analytics to help us understand how our customers use the Site. You can read more about how Google uses your Personal Information here: <a href="https://policies.google.com/privacy" className="text-[#f0c808] hover:underline" target="_blank" rel="noreferrer">https://policies.google.com/privacy</a>.</li>
-                <li>You can opt out of targeted advertising by utilizing the following portals: 
-                  <br />- <i>Facebook:</i> <a href="https://www.facebook.com/settings/?tab=ads" className="text-[#f0c808] hover:underline" target="_blank" rel="noreferrer">https://www.facebook.com/settings/?tab=ads</a>
-                  <br />- <i>Google:</i> <a href="https://www.google.com/settings/ads/anonymous" className="text-[#f0c808] hover:underline" target="_blank" rel="noreferrer">https://www.google.com/settings/ads/anonymous</a>
-                </li>
               </ul>
             </div>
           </section>
@@ -110,8 +106,8 @@ export default function PrivacyPolicyPage() {
               <p>For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us by e-mail at:</p>
               <div className="bg-zinc-950 border border-white/10 p-4 inline-block mt-2">
                 <p className="font-bold text-white">Wear Whatever Security & Privacy Uplink</p>
-                <p>Email: privacy@wearwhatever.in</p>
-                <p>Support: support@wearwhatever.in</p>
+                <p>Email: support.wearwhatever@gmail.com</p>
+                <p>Support: support.wearwhatever@gmail.com</p>
               </div>
             </div>
           </section>
