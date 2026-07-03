@@ -1,7 +1,7 @@
 import prisma from "../../../lib/prisma";
 import { notFound } from "next/navigation";
-import AddToCartButton from "../../../components/AddToCartButton";
-import PDPGallery from "../../../components/PDPGallery"; // Import the new interactive gallery
+import ProductActions from "../../../components/ProductActions"; // UPDATED IMPORT
+import PDPGallery from "../../../components/PDPGallery"; 
 import Navbar from "../../../components/NavBar";
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
@@ -33,12 +33,12 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
           
-          {/* LEFT: Interactive Product Gallery (Spans 7 columns on desktop) */}
+          {/* LEFT: Interactive Product Gallery */}
           <div className="lg:col-span-7 w-full">
             <PDPGallery images={product.images} productName={product.name} />
           </div>
 
-          {/* RIGHT: Sticky Product Details (Spans 5 columns on desktop) */}
+          {/* RIGHT: Sticky Product Details */}
           <div className="lg:col-span-5 flex flex-col justify-center lg:sticky lg:top-32">
             
             <h1 className="text-5xl md:text-7xl font-black text-white mb-4 uppercase italic tracking-tighter leading-[0.85] drop-shadow-xl">
@@ -49,7 +49,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               ₹{product.price.toFixed(2)}
             </p>
             
-            <div className="space-y-4 mb-10">
+            <div className="space-y-4 mb-10 border-b border-white/10 pb-10">
               <h4 className="text-[#f0c808] font-mono text-xs uppercase tracking-[0.2em] flex items-center gap-2">
                 <span className="w-2 h-2 bg-[#f0c808] rounded-full inline-block animate-pulse"></span> Details
               </h4>
@@ -58,13 +58,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               </p>
             </div>
 
-            {/* Reusable Add to Cart Button */}
-            <div className="mb-12 shadow-[0_0_30px_rgba(240,200,8,0.1)]">
-               <AddToCartButton product={product} />
-            </div>
+            {/* INTEGRATED: The professional Size & Cart flow */}
+            <ProductActions product={product} />
             
             {/* Brutalist Specs Grid */}
-            <div className="grid grid-cols-2 gap-x-4 gap-y-8 border-t border-white/10 pt-8">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-8 border-t border-white/10 mt-12 pt-8">
               <div>
                 <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest mb-1">Material</p>
                 <p className="text-white text-sm font-bold tracking-wide">100% HEAVYWEIGHT COTTON</p>
