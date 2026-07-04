@@ -5,11 +5,21 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // 1. Extract the Order ID sent by Cashfree
+    // 1. IMPROVED: Check if this is just a test ping from Cashfree
+    if (body.type === "test_notification") {
+       console.log("✅ Received test notification from Cashfree");
+       return NextResponse.json({ success: true, message: "Test received" });
+    }
+
+    // 2. Extract the Order ID (Keep your existing structure)
     const orderId = body?.data?.order?.order_id;
     if (!orderId) { 
+      // Log the body so you can see exactly what Cashfree sent in the Vercel logs
+      console.error("Webhook payload structure unknown:", JSON.stringify(body));
       return NextResponse.json({ error: "No order ID found" }, { status: 400 });
     }
+    
+    // ... (rest of your existing code below)
 
     // 2. SECURITY CHECK: Instead of trusting the webhook payload directly,
     // we make a secure server-to-server call back to Cashfree to verify the TRUE status.
