@@ -9,20 +9,20 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { customer, items, total } = body;
 
-    // 1. EXPLICIT ENVIRONMENT CONTROL
-    // We check the environment variable. If it's PRODUCTION, we use the live API.
-    const cashfreeEnv = process.env.CASHFREE_ENVIRONMENT || "SANDBOX";
+    // 1. THE NUCLEAR FIX: HARDCODED ENVIRONMENT ROUTING
+    const cashfreeEnv = process.env.CASHFREE_ENVIRONMENT === "PRODUCTION" ? "PRODUCTION" : "SANDBOX";
+    
+    // Explicit Endpoints
     const cashfreeEndpoint = cashfreeEnv === "PRODUCTION" 
       ? "https://api.cashfree.com/pg/orders" 
       : "https://sandbox.cashfree.com/pg/orders";
 
-    // 2. Base URL Formatting
-    let baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    if (baseUrl.includes("wearwhatever.in") && !baseUrl.startsWith("https")) {
-        baseUrl = baseUrl.replace("http://", "https://");
-    }
+    // Explicit Base URLs (Bypasses Vercel Env Variable Issues completely)
+    const baseUrl = cashfreeEnv === "PRODUCTION"
+      ? "https://www.wearwhatever.in"
+      : "http://localhost:3000";
 
-    // 3. Create Order in Database
+    // 2. Create Order in Database
     const newOrder = await prisma.order.create({
       data: {
         customerName: customer.name,
@@ -41,11 +41,10 @@ export async function POST(req: Request) {
       },
     });
 
-    // 4. Call Cashfree API
+    // 3. Call Cashfree API
     const response = await fetch(cashfreeEndpoint, {
       method: "POST",
       headers: {
-        // .trim() prevents accidental whitespace errors from Vercel paste
         "x-client-id": process.env.CASHFREE_APP_ID!.trim(),
         "x-client-secret": process.env.CASHFREE_SECRET_KEY!.trim(),
         "x-api-version": "2023-08-01",
@@ -62,6 +61,7 @@ export async function POST(req: Request) {
           customer_phone: customer.phone || "9999999999",
         },
         order_meta: {
+          // Because of our fix above, this is GUARANTEED to be wearwhatever.in in Production
           return_url: `${baseUrl}/order-success?order_id=${newOrder.id}`,
           notify_url: `${baseUrl}/api/webhook/cashfree`
         }
