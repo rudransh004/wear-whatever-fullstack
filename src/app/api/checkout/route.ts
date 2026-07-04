@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     });
 
     // 2. Call Cashfree REST API directly
-    const response = await fetch("https://sandbox.cashfree.com/pg/orders", {
+    const response = await fetch("https://api.cashfree.com/pg/orders", {
       method: "POST",
       headers: {
         "x-client-id": process.env.CASHFREE_APP_ID!,
