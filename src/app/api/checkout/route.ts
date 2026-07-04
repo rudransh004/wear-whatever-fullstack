@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { customer, items, total } = body;
 
-    // 1. Create Order in Database
+    // 1. Create Order in Database (Status defaults to "Processing")
     const newOrder = await prisma.order.create({
       data: {
         customerName: customer.name,
@@ -43,7 +43,8 @@ export async function POST(req: Request) {
           customer_phone: customer.phone || "9999999999",
         },
         order_meta: {
-          return_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/checkout/status?order_id=${newOrder.id}`
+          // FIXED: Now points directly to your existing order-success page
+          return_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/order-success?order_id=${newOrder.id}`
         }
       }),
     });
