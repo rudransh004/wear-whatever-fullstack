@@ -4,7 +4,6 @@ import { useCart } from "../../lib/store";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-// 1. Import the Cashfree Frontend SDK
 // @ts-ignore: No types available for this package
 import { load } from "@cashfreepayments/cashfree-js";
 
@@ -26,7 +25,7 @@ export default function CheckoutPage() {
       customer: {
         name: formData.get("name"),
         email: formData.get("email"),
-        phone: formData.get("phone"), // Added phone number
+        phone: formData.get("phone"), 
         address: formData.get("address"),
       },
       items: items,
@@ -34,7 +33,6 @@ export default function CheckoutPage() {
     };
 
     try {
-      // 2. Send cart data to our newly merged Backend API
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -44,23 +42,21 @@ export default function CheckoutPage() {
       const data = await response.json();
 
       if (response.ok && data.success && data.payment_session_id) {
-        // 3. Initialize Cashfree securely on the client
-        // Replace your existing load() call in src/app/checkout/page.tsx with this:
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        
+        // EXPLICIT ENVIRONMENT CHECK FOR FRONTEND
+        const envMode = process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT === "PRODUCTION" ? "production" : "sandbox";
+        
         const cashfree = await load({
-        mode: baseUrl.includes("wearwhatever.in") ? "production" : "sandbox",
-      });
+          mode: envMode,
+        });
 
-        // 4. Pop open the payment window using the Session ID
         let checkoutOptions = {
           paymentSessionId: data.payment_session_id,
-          redirectTarget: "_self", // Redirects automatically to the status page we built earlier
+          redirectTarget: "_self",
         };
 
-        // This triggers the actual UPI/Card UI on the screen
         cashfree.checkout(checkoutOptions);
         
-        // Note: We don't clear the cart here yet. We only clear it if they actually pay successfully.
       } else {
         throw new Error(data.error || "Failed to generate payment session");
       }
@@ -83,40 +79,11 @@ export default function CheckoutPage() {
           </h1>
           
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input 
-              name="name" 
-              required 
-              placeholder="FULL NAME" 
-              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" 
-            />
-            <input 
-              name="email" 
-              type="email" 
-              required 
-              placeholder="EMAIL ADDRESS" 
-              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" 
-            />
-            {/* Added Phone Number Input required by Cashfree */}
-            <input 
-              name="phone" 
-              type="tel" 
-              required 
-              minLength={10}
-              maxLength={10}
-              placeholder="PHONE NUMBER (10 DIGITS)" 
-              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" 
-            />
-            <textarea 
-              name="address" 
-              required 
-              placeholder="COMPLETE SHIPPING ADDRESS" 
-              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all h-32 uppercase" 
-            />
-            <button 
-              type="submit" 
-              disabled={loading || items.length === 0}
-              className="w-full bg-yellow-500 text-black py-5 font-black uppercase hover:bg-yellow-400 transition-all disabled:opacity-50"
-            >
+            <input name="name" required placeholder="FULL NAME" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" />
+            <input name="email" type="email" required placeholder="EMAIL ADDRESS" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" />
+            <input name="phone" type="tel" required minLength={10} maxLength={10} placeholder="PHONE NUMBER (10 DIGITS)" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" />
+            <textarea name="address" required placeholder="COMPLETE SHIPPING ADDRESS" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all h-32 uppercase" />
+            <button type="submit" disabled={loading || items.length === 0} className="w-full bg-yellow-500 text-black py-5 font-black uppercase hover:bg-yellow-400 transition-all disabled:opacity-50">
               {loading ? "INITIALIZING SECURE GATEWAY..." : "PAY SECURELY"}
             </button>
           </form>

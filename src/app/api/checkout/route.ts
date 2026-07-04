@@ -9,16 +9,20 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { customer, items, total } = body;
 
-    // 1. BULLETPROOF ENVIRONMENT DETECTION
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const isLiveDomain = baseUrl.includes("wearwhatever.in");
-    
-    // If it's the live domain, use Production. If localhost, use Sandbox.
-    const cashfreeEndpoint = isLiveDomain 
+    // 1. EXPLICIT ENVIRONMENT CONTROL
+    // We check the environment variable. If it's PRODUCTION, we use the live API.
+    const cashfreeEnv = process.env.CASHFREE_ENVIRONMENT || "SANDBOX";
+    const cashfreeEndpoint = cashfreeEnv === "PRODUCTION" 
       ? "https://api.cashfree.com/pg/orders" 
       : "https://sandbox.cashfree.com/pg/orders";
 
-    // 2. Create Order in Database
+    // 2. Base URL Formatting
+    let baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    if (baseUrl.includes("wearwhatever.in") && !baseUrl.startsWith("https")) {
+        baseUrl = baseUrl.replace("http://", "https://");
+    }
+
+    // 3. Create Order in Database
     const newOrder = await prisma.order.create({
       data: {
         customerName: customer.name,
@@ -37,12 +41,13 @@ export async function POST(req: Request) {
       },
     });
 
-    // 3. Call Cashfree API
+    // 4. Call Cashfree API
     const response = await fetch(cashfreeEndpoint, {
       method: "POST",
       headers: {
-        "x-client-id": process.env.CASHFREE_APP_ID!,
-        "x-client-secret": process.env.CASHFREE_SECRET_KEY!,
+        // .trim() prevents accidental whitespace errors from Vercel paste
+        "x-client-id": process.env.CASHFREE_APP_ID!.trim(),
+        "x-client-secret": process.env.CASHFREE_SECRET_KEY!.trim(),
         "x-api-version": "2023-08-01",
         "Content-Type": "application/json",
       },
@@ -66,7 +71,7 @@ export async function POST(req: Request) {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Cashfree API Error:", data);
+      console.error(`Cashfree API Error (${cashfreeEnv}):`, data);
       throw new Error(data.message || "Failed to create order");
     }
 
