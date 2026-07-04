@@ -9,7 +9,19 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { customer, items, total } = body;
 
-    // 1. Create Order in Database (Status defaults to "Processing")
+    // 1. Determine Environment and Select Correct Endpoint
+    // If you are local, use sandbox. If on Vercel production, use live api.
+    const isProduction = process.env.NODE_ENV === "production";
+    const cashfreeEndpoint = isProduction 
+      ? "https://api.cashfree.com/pg/orders" 
+      : "https://sandbox.cashfree.com/pg/orders";
+
+    // 2. Enforce HTTPS production domain for Cashfree Live, allow fallback for local Sandbox testing
+    const baseUrl = isProduction 
+      ? "https://www.wearwhatever.in" 
+      : (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000");
+
+    // 3. Create Order in Database (Defaults to "Processing")
     const newOrder = await prisma.order.create({
       data: {
         customerName: customer.name,
@@ -17,14 +29,19 @@ export async function POST(req: Request) {
         address: customer.address,
         totalAmount: total,
         userId: user?.id || null,
-        items: { create: items.map((item: any) => ({
-            productId: item.id, name: item.name, price: item.price, quantity: item.quantity,
-        }))},
+        items: { 
+          create: items.map((item: any) => ({
+            productId: item.id, 
+            name: item.name, 
+            price: item.price, 
+            quantity: item.quantity,
+          }))
+        },
       },
     });
 
-    // 2. Call Cashfree REST API directly
-    const response = await fetch("https://api.cashfree.com/pg/orders", {
+    // 4. Call Cashfree API
+    const response = await fetch(cashfreeEndpoint, {
       method: "POST",
       headers: {
         "x-client-id": process.env.CASHFREE_APP_ID!,
@@ -43,8 +60,8 @@ export async function POST(req: Request) {
           customer_phone: customer.phone || "9999999999",
         },
         order_meta: {
-          // FIXED: Now points directly to your existing order-success page
-          return_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/order-success?order_id=${newOrder.id}`
+          return_url: `${baseUrl}/order-success?order_id=${newOrder.id}`,
+          notify_url: `${baseUrl}/api/webhook/cashfree`
         }
       }),
     });

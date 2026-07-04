@@ -46,7 +46,7 @@ export default function CheckoutPage() {
       if (response.ok && data.success && data.payment_session_id) {
         // 3. Initialize Cashfree securely on the client
         const cashfree = await load({
-          mode: process.env.NODE_ENV === "production" ? "production" : "sandbox", // CHANGE TO "production" LATER WHEN DOMAIN IS LIVE
+          mode: "production", // CHANGE TO "production" LATER WHEN DOMAIN IS LIVE
         });
 
         // 4. Pop open the payment window using the Session ID
