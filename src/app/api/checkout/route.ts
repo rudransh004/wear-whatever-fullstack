@@ -9,19 +9,16 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { customer, items, total } = body;
 
-    // 1. Determine Environment and Select Correct Endpoint
-    // If you are local, use sandbox. If on Vercel production, use live api.
-    const isProduction = process.env.NODE_ENV === "production";
-    const cashfreeEndpoint = isProduction 
+    // 1. BULLETPROOF ENVIRONMENT DETECTION
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const isLiveDomain = baseUrl.includes("wearwhatever.in");
+    
+    // If it's the live domain, use Production. If localhost, use Sandbox.
+    const cashfreeEndpoint = isLiveDomain 
       ? "https://api.cashfree.com/pg/orders" 
       : "https://sandbox.cashfree.com/pg/orders";
 
-    // 2. Enforce HTTPS production domain for Cashfree Live, allow fallback for local Sandbox testing
-    const baseUrl = isProduction 
-      ? "https://www.wearwhatever.in" 
-      : (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000");
-
-    // 3. Create Order in Database (Defaults to "Processing")
+    // 2. Create Order in Database
     const newOrder = await prisma.order.create({
       data: {
         customerName: customer.name,
@@ -40,7 +37,7 @@ export async function POST(req: Request) {
       },
     });
 
-    // 4. Call Cashfree API
+    // 3. Call Cashfree API
     const response = await fetch(cashfreeEndpoint, {
       method: "POST",
       headers: {

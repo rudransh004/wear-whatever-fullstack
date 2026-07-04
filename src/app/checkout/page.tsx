@@ -45,9 +45,11 @@ export default function CheckoutPage() {
 
       if (response.ok && data.success && data.payment_session_id) {
         // 3. Initialize Cashfree securely on the client
+        // Replace your existing load() call in src/app/checkout/page.tsx with this:
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
         const cashfree = await load({
-          mode: "production", // CHANGE TO "production" LATER WHEN DOMAIN IS LIVE
-        });
+        mode: baseUrl.includes("wearwhatever.in") ? "production" : "sandbox",
+      });
 
         // 4. Pop open the payment window using the Session ID
         let checkoutOptions = {
