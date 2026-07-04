@@ -4,6 +4,9 @@ import { useCart } from "../../lib/store";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+// 1. Import the Cashfree Frontend SDK
+// @ts-ignore: No types available for this package
+import { load } from "@cashfreepayments/cashfree-js";
 
 export default function CheckoutPage() {
   const { items, clearCart } = useCart();
@@ -23,6 +26,7 @@ export default function CheckoutPage() {
       customer: {
         name: formData.get("name"),
         email: formData.get("email"),
+        phone: formData.get("phone"), // Added phone number
         address: formData.get("address"),
       },
       items: items,
@@ -30,7 +34,7 @@ export default function CheckoutPage() {
     };
 
     try {
-      // Points to the backend API route handler
+      // 2. Send cart data to our newly merged Backend API
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -39,15 +43,28 @@ export default function CheckoutPage() {
 
       const data = await response.json();
 
-      if (response.ok && data.orderId) {
-        clearCart(); 
-        router.push(`/order-success?id=${data.orderId}`); 
+      if (response.ok && data.success && data.payment_session_id) {
+        // 3. Initialize Cashfree securely on the client
+        const cashfree = await load({
+          mode: "sandbox", // CHANGE TO "production" LATER WHEN DOMAIN IS LIVE
+        });
+
+        // 4. Pop open the payment window using the Session ID
+        let checkoutOptions = {
+          paymentSessionId: data.payment_session_id,
+          redirectTarget: "_self", // Redirects automatically to the status page we built earlier
+        };
+
+        // This triggers the actual UPI/Card UI on the screen
+        cashfree.checkout(checkoutOptions);
+        
+        // Note: We don't clear the cart here yet. We only clear it if they actually pay successfully.
       } else {
-        alert("Order failed. Please check your database connection.");
+        throw new Error(data.error || "Failed to generate payment session");
       }
     } catch (error) {
       console.error("Checkout failed", error);
-      alert("Network error. Is your Supabase database online?");
+      alert("Payment Gateway Error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -68,27 +85,37 @@ export default function CheckoutPage() {
               name="name" 
               required 
               placeholder="FULL NAME" 
-              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-purple-500 outline-none transition-all uppercase" 
+              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" 
             />
             <input 
               name="email" 
               type="email" 
               required 
               placeholder="EMAIL ADDRESS" 
-              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-purple-500 outline-none transition-all uppercase" 
+              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" 
+            />
+            {/* Added Phone Number Input required by Cashfree */}
+            <input 
+              name="phone" 
+              type="tel" 
+              required 
+              minLength={10}
+              maxLength={10}
+              placeholder="PHONE NUMBER (10 DIGITS)" 
+              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" 
             />
             <textarea 
               name="address" 
               required 
               placeholder="COMPLETE SHIPPING ADDRESS" 
-              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-purple-500 outline-none transition-all h-32 uppercase" 
+              className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all h-32 uppercase" 
             />
             <button 
               type="submit" 
               disabled={loading || items.length === 0}
-              className="w-full bg-white text-black py-5 font-black uppercase hover:bg-purple-600 hover:text-white transition-all disabled:opacity-50"
+              className="w-full bg-yellow-500 text-black py-5 font-black uppercase hover:bg-yellow-400 transition-all disabled:opacity-50"
             >
-              {loading ? "PROCESSING..." : "CONFIRM & PLACE ORDER"}
+              {loading ? "INITIALIZING SECURE GATEWAY..." : "PAY SECURELY"}
             </button>
           </form>
         </div>
@@ -103,7 +130,7 @@ export default function CheckoutPage() {
               <div key={item.id} className="flex justify-between items-center">
                 <div className="flex gap-4 items-center">
                   <div className="relative h-12 w-12 bg-zinc-900 border border-white/5 overflow-hidden">
-                    <Image src={item.image} alt={item.name} fill className="object-cover" />
+                    <Image src={item.image || "/blank-image.png"} alt={item.name || "Product Image"} fill className="object-cover" />
                   </div>
                   <div>
                     <p className="text-white text-xs font-bold uppercase">{item.name}</p>
