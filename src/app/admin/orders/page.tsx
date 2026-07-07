@@ -32,7 +32,7 @@ export default async function AdminOrdersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
-            {orders.map((order) => (
+            {orders.map((order : any) => (
               <tr key={order.id} className="hover:bg-white/[0.02] transition-colors group">
                 <td className="p-4 text-zinc-500 text-[10px]">{order.id.substring(0, 8)}...</td>
                 <td className="p-4 text-white uppercase text-xs font-bold">{order.customerName}</td>

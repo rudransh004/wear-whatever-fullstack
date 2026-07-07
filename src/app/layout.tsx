@@ -7,6 +7,9 @@ import NavBar from "../components/NavBar";
 import CartSidebar from "../components/CartSidebar";
 import Footer from "../components/Footer"; // NEW: Import the Footer
 
+import { Inter } from "next/font/google";
+import WishlistProvider from "../components/WishlistProvider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         
         {/* 'flex-grow' ensures the main content pushes the footer to the bottom of the screen */}
         <main className="flex-grow">
+          <WishlistProvider />
           {children}
         </main>
 

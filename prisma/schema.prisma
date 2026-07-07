@@ -23,6 +23,7 @@ model Product {
   isAiEnabled Boolean  @default(false) // To mark AI-generated shirts
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  wishlistedBy Wishlist[]
 }
 
 model User {
@@ -30,6 +31,7 @@ model User {
   email  String  @unique
   name   String?
   orders Order[]
+  wishlist  Wishlist[]
 }
 
 model Order {
@@ -53,4 +55,16 @@ model OrderItem {
   price     Float
   quantity  Int
   order     Order  @relation(fields: [orderId], references: [id])
+}
+
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId]) // 👈 Prevents duplicate wishlisting of the same item
 }

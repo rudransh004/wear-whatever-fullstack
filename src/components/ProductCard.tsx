@@ -2,7 +2,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '../lib/store'; 
-import { ChevronLeft, ChevronRight } from 'lucide-react'; // For the carousel arrows
+import { ChevronLeft, ChevronRight } from 'lucide-react'; 
+// 1. IMPORT THE WISHLIST BUTTON
+import WishlistButton from './WishlistButton'; 
 
 interface ProductProps {
   product: {
@@ -26,25 +28,24 @@ export default function ProductCard({ product }: ProductProps) {
   const images = product.images && product.images.length > 0 ? product.images : ['/blank-tee.png'];
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevents navigating to the product page when clicking "Add to Cart"
+    e.preventDefault(); 
     addItem({
       id: product.id,
       name: product.name,
       price: product.price,
-      image: images[0], // Add the first image to the cart
+      image: images[0],
       quantity: 1,
     });
     openCart();
   };
 
-  // Carousel Navigation Functions
   const nextImage = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigating to the product page
+    e.preventDefault(); 
     setCurrentImageIdx((prev) => (prev + 1) % images.length);
   };
 
   const prevImage = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigating to the product page
+    e.preventDefault(); 
     setCurrentImageIdx((prev) => (prev - 1 + images.length) % images.length);
   };
 
@@ -58,7 +59,7 @@ export default function ProductCard({ product }: ProductProps) {
       {/* 1. INTERACTIVE IMAGE CAROUSEL */}
       <Link href={`/product/${product.id}`} className="relative aspect-[4/5] w-full overflow-hidden bg-zinc-900 block cursor-crosshair">
         
-        {/* Render all images, but only fade in the active one */}
+        {/* Render all images */}
         {images.map((img, idx) => (
           <img
             key={idx}
@@ -70,7 +71,14 @@ export default function ProductCard({ product }: ProductProps) {
           />
         ))}
 
-        {/* Carousel Navigation Arrows (Reveal on Hover) */}
+        {/* 2. INJECT WISHLIST BUTTON HERE */}
+        {/* We use z-20 to ensure it sits above the image and arrows */}
+        {/* onClick in the WishlistButton component uses e.preventDefault() so this won't trigger the Link routing */}
+        <div className="absolute top-4 right-4 z-20">
+          <WishlistButton productId={product.id} />
+        </div>
+
+        {/* Carousel Navigation Arrows */}
         {images.length > 1 && (
           <div className={`absolute inset-0 flex items-center justify-between px-2 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
             <button 
@@ -88,7 +96,7 @@ export default function ProductCard({ product }: ProductProps) {
           </div>
         )}
 
-        {/* Image Indicators (Dots at the bottom) */}
+        {/* Image Indicators */}
         {images.length > 1 && (
           <div className="absolute bottom-3 left-0 w-full flex justify-center gap-1.5 z-10">
             {images.map((_, idx) => (
