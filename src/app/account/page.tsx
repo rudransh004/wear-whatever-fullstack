@@ -1,3 +1,5 @@
+// src/app/account/page.tsx
+
 import { createClient } from '../../utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { logout } from "../login/actions";
@@ -5,6 +7,9 @@ import { prisma } from "../../lib/prisma";
 import Navbar from "../../components/NavBar";
 import Link from "next/link";
 import { ShieldCheck, Package, MapPin, LogOut, ArrowRight, Clock, Fingerprint, Mail, HelpCircle } from "lucide-react";
+
+// Import the new hydrator component
+import WishlistHydrator from "../../components/WishlistHydrator";
 
 export default async function AccountPage() {
   const supabase = await createClient();
@@ -29,8 +34,20 @@ export default async function AccountPage() {
     }
   });
 
+  // Fetch the user's wishlist IDs from the database
+  const wishlistItems = await prisma.wishlist.findMany({
+    where: { userId: user.id },
+    select: { productId: true }
+  });
+  
+  // Flatten the object array into a simple string array of IDs
+  const wishlistIds = wishlistItems.map((item : any)=> item.productId);
+
   return (
     <main className="min-h-screen bg-[#020202] text-zinc-400 selection:bg-[#f0c808] selection:text-black pt-32 pb-24 overflow-x-hidden">
+      
+      {/* Silently hydrate the Zustand store with the server data */}
+
       <Navbar />
       
       {/* Background Grid */}
@@ -132,7 +149,7 @@ export default async function AccountPage() {
               ) : (
                 /* Order List */
                 <div className="space-y-6">
-                  {userOrders.map((order) => (
+                  {userOrders.map((order : any) => (
                     <div key={order.id} className="bg-black border border-white/10 p-6 flex flex-col xl:flex-row justify-between gap-8 hover:border-[#f0c808]/50 transition-colors group">
                       
                       {/* Left: Order Info & Images */}

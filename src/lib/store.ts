@@ -66,3 +66,24 @@ export const useFilters = create<FilterStore>((set) => ({
   setSearchQuery: (query) => set({ searchQuery: query }),
   setCategory: (category) => set({ selectedCategory: category }),
 }));
+
+// 4. Wishlist Store (UPDATED)
+interface WishlistStore {
+  wishlistIds: string[];
+  userId: string | null; // 👈 Added userId state to prevent auth lock errors
+  setWishlist: (ids: string[]) => void;
+  setUserId: (id: string | null) => void; // 👈 Added setter for user ID
+  clientToggle: (id: string) => void;
+}
+
+export const useWishlist = create<WishlistStore>((set) => ({
+  wishlistIds: [],
+  userId: null, // 👈 Initialized as null
+  setWishlist: (ids) => set({ wishlistIds: ids }),
+  setUserId: (id) => set({ userId: id }), // 👈 Implemented the setter
+  clientToggle: (id) => set((state) => ({
+    wishlistIds: state.wishlistIds.includes(id)
+      ? state.wishlistIds.filter((pId) => pId !== id)
+      : [...state.wishlistIds, id]
+  })),
+}));

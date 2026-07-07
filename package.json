@@ -28,6 +28,7 @@
     "react-dom": "19.2.3",
     "react-image-crop": "^11.0.10",
     "react-rnd": "^10.5.3",
+    "repomix": "^1.16.0",
     "zustand": "^5.0.11"
   },
   "devDependencies": {

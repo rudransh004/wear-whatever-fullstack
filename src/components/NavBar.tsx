@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, X, ShoppingCart, User, Search, Wand2, Info } from 'lucide-react';
+import { Menu, X, ShoppingCart, User, Search, Wand2, Info, Heart } from 'lucide-react';
 import { useScrollSpy } from '../hooks/useScrollSpy';
 
 // Import your existing store and auth client
@@ -118,6 +118,10 @@ export default function Navbar() {
                <User size={20} />
             </Link>
 
+            <Link href="/wishlist" className="hover:text-[#f0c808] transition-colors relative" title="Wishlist">
+              <Heart size={20} />
+            </Link>
+
             {/* Live Cart Integration */}
             <button onClick={openCart} className="hover:text-[#f0c808] transition-colors relative" title="Cart">
                <ShoppingCart size={20} />
@@ -131,6 +135,9 @@ export default function Navbar() {
 
           {/* 4. MOBILE MENU & CART */}
           <div className="md:hidden flex items-center justify-end gap-5">
+            <Link href="/wishlist" className="text-white hover:text-[#f0c808]">
+              <Heart size={24} />
+            </Link>
             <button onClick={openCart} className="text-white hover:text-[#f0c808] relative">
                <ShoppingCart size={24} />
                {mounted && itemCount > 0 && (
