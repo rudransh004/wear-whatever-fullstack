@@ -304,26 +304,26 @@ export default function AboutPage() {
           </div>
 
           <div className="footer-links">
-            <div className="footer-col">
+            {/* <div className="footer-col">
               <h4>Categories</h4>
               <Link href="#">Oversized T-Shirts</Link>
               <Link href="#">New Arrivals</Link>
               <Link href="#">Best Sellers</Link>
-            </div>
+            </div> */}
             
-            <div className="footer-col">
+            {/* <div className="footer-col">
               <h4>Company</h4>
               <Link href="#">About Us</Link>
               <Link href="#">Privacy Policy</Link>
               <Link href="#">Terms & Conditions</Link>
-            </div>
+            </div> */}
             
-            <div className="footer-col">
+            {/* <div className="footer-col">
               <h4>Support</h4>
               <Link href="#">Contact Us</Link>
               <Link href="#">FAQs</Link>
               <Link href="#">Shipping Policy</Link>
-            </div>
+            </div> */}
 
             <div className="footer-col">
               <h4>Leadership</h4>

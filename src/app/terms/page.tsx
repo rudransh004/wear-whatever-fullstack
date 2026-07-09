@@ -25,7 +25,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-xl font-bold text-white uppercase tracking-wider mb-4 border-b border-white/10 pb-4">1. Overview & Acceptance</h2>
             <div className="space-y-4 text-zinc-400">
-              <p>This website is operated by Wear Whatever. Throughout the site, the terms "we", "us" and "our" refer to Wear Whatever. Wear Whatever offers this website, including all information, tools, AI generation services, and products available from this site to you, the user, conditioned upon your acceptance of all terms, conditions, policies and notices stated here.</p>
+              <p>This website is operated by <strong className="text-white">RUDRANSH GARG</strong> (Founder & Developer). Throughout the site, the terms "we", "us" and "our" refer to Wear Whatever. Wear Whatever offers this website, including all information, tools, AI generation services, and products available from this site to you, the user, conditioned upon your acceptance of all terms, conditions, policies and notices stated here.</p>
               <p>By visiting our site and/or purchasing something from us, you engage in our "Service" and agree to be bound by the following terms and conditions ("Terms of Service", "Terms"). These Terms of Service apply to all users of the site, including without limitation users who are browsers, vendors, customers, merchants, and/or contributors of content.</p>
             </div>
           </section>

@@ -1,25 +1,34 @@
+// src/app/contact/page.tsx
 "use client";
 
 import { useState } from "react";
 import Navbar from "../../components/NavBar";
 import Link from "next/link";
 import { Mail, MapPin, Clock, ArrowRight } from "lucide-react";
+import { sendContactEmail } from "../actions/contact"; // NEW: Import your secure backend action
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Simulated form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  // REAL form submission engine
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate network request
-    setTimeout(() => {
-      setIsSubmitting(false);
+    // Package the form data automatically
+    const formData = new FormData(e.currentTarget);
+    
+    // Dispatch to the Next.js Server Action
+    const result = await sendContactEmail(formData);
+
+    setIsSubmitting(false);
+    
+    if (result.success) {
       setIsSubmitted(true);
-      // In Phase 1.2, we will wire this to Resend/Nodemailer
-    }, 1500);
+    } else {
+      alert("Transmission failed. Please check your connection or email us directly.");
+    }
   };
 
   return (
@@ -55,8 +64,8 @@ export default function ContactPage() {
                 <Mail className="text-[#f0c808] w-5 h-5 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-zinc-500 mb-1 text-[10px]">Direct Inbox</p>
-                  <a href="mailto:support@wearwhatever.com" className="text-white hover:text-[#f0c808] transition-colors font-bold">
-                    support@wearwhatever.com
+                  <a href="mailto:wearwhatever2210@gmail.com" className="text-white hover:text-[#f0c808] transition-colors font-bold">
+                    wearwhatever2210@gmail.com
                   </a>
                 </div>
               </div>
@@ -121,16 +130,20 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="flex flex-col">
                     <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Name</label>
+                    {/* ADDED: name="name" */}
                     <input 
                       type="text" 
+                      name="name"
                       required
                       className="bg-transparent border-b border-white/20 pb-2 text-white font-mono text-sm focus:outline-none focus:border-[#f0c808] transition-colors rounded-none" 
                     />
                   </div>
                   <div className="flex flex-col">
                     <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Email</label>
+                    {/* ADDED: name="email" */}
                     <input 
                       type="email" 
+                      name="email"
                       required
                       className="bg-transparent border-b border-white/20 pb-2 text-white font-mono text-sm focus:outline-none focus:border-[#f0c808] transition-colors rounded-none" 
                     />
@@ -139,8 +152,9 @@ export default function ContactPage() {
 
                 <div className="flex flex-col">
                   <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Subject</label>
-                  {/* FIX: defaultValue="" applied here, selected removed from option below */}
+                  {/* ADDED: name="subject" */}
                   <select 
+                    name="subject"
                     required 
                     defaultValue=""
                     className="bg-transparent border-b border-white/20 pb-2 text-white font-mono text-sm focus:outline-none focus:border-[#f0c808] transition-colors appearance-none rounded-none cursor-pointer"
@@ -155,8 +169,10 @@ export default function ContactPage() {
 
                 <div className="flex flex-col">
                   <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Order ID (Optional)</label>
+                  {/* ADDED: name="orderId" */}
                   <input 
                     type="text" 
+                    name="orderId"
                     placeholder="e.g. ord_123456789"
                     className="bg-transparent border-b border-white/20 pb-2 text-zinc-300 font-mono text-sm focus:outline-none focus:border-[#f0c808] transition-colors rounded-none placeholder:text-zinc-700" 
                   />
@@ -164,7 +180,9 @@ export default function ContactPage() {
 
                 <div className="flex flex-col">
                   <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-2">Message</label>
+                  {/* ADDED: name="message" */}
                   <textarea 
+                    name="message"
                     required
                     rows={4}
                     className="bg-transparent border-b border-white/20 pb-2 text-white font-mono text-sm focus:outline-none focus:border-[#f0c808] transition-colors resize-none rounded-none" 
