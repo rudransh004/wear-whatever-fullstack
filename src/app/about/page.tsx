@@ -324,7 +324,6 @@ export default function AboutPage() {
               </button>
             </form>
           </div>
-
           <div className="spot-label">SPOT US ON</div>
 
           <div className="footer-banner">
@@ -362,7 +361,7 @@ export default function AboutPage() {
                 <div className="founder-profile">
                   <div className="founder-avatar">
                     
-                      <Image src="/founder.jpg" alt="Rudransh Garg" width={40} height={40} />
+                      <Image src="/Rudransh.png" alt="Rudransh Garg" width={40} height={40} />
                     
                   </div>
                   <div className="founder-details">
@@ -386,7 +385,7 @@ export default function AboutPage() {
 
                 <div className="founder-profile">
                   <div className="founder-avatar">
-                    <Image src="/founder-rishindera.jpeg" alt="Suhani Sadh" width={40} height={40} />
+                    <Image src="/suhani.jpeg" alt="Suhani Sadh" width={40} height={40} />
                   </div>
                   <div className="founder-details">
                     <span className="founder-name">Suhani Sadh</span>

@@ -2,13 +2,17 @@
 
 import { useState } from "react";
 import { useCart } from "../lib/store";
-import { ShoppingBag, Ruler } from "lucide-react";
+import { ShoppingBag, Ruler, Plus, Minus } from "lucide-react";
 
 export default function ProductActions({ product }: { product: any }) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
   const { addItem, openCart } = useCart();
   
   const sizes = ["S", "M", "L", "XL", "XXL"];
+
+  const handleIncrement = () => setQuantity((prev) => prev + 1);
+  const handleDecrement = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -16,8 +20,14 @@ export default function ProductActions({ product }: { product: any }) {
       return;
     }
     
-    // Pushes the item to your global Zustand store and forces the sidebar open
-    addItem({ ...product, quantity: 1, selectedSize });
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images && product.images.length > 0 ? product.images[0] : '/blank-tee.png',
+      quantity,
+      size: selectedSize,
+    });
     openCart();
   };
 
@@ -49,13 +59,35 @@ export default function ProductActions({ product }: { product: any }) {
         </div>
       </div>
 
+      {/* Quantity Selector */}
+      <div>
+        <span className="font-mono text-xs text-zinc-400 uppercase tracking-widest block mb-4">Quantity</span>
+        <div className="flex items-center w-36 border border-white/20 bg-zinc-950">
+          <button 
+            onClick={handleDecrement}
+            className="w-12 h-12 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-colors font-mono"
+          >
+            <Minus size={14} />
+          </button>
+          <span className="flex-1 text-center font-mono text-sm font-bold text-white">
+            {quantity}
+          </span>
+          <button 
+            onClick={handleIncrement}
+            className="w-12 h-12 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-colors font-mono"
+          >
+            <Plus size={14} />
+          </button>
+        </div>
+      </div>
+
       {/* Primary Conversion Trigger */}
       <button
         onClick={handleAddToCart}
         className="w-full bg-[#f0c808] hover:bg-white text-black py-5 font-mono text-sm font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all duration-300 active:scale-95 shadow-[0_0_30px_rgba(240,200,8,0.15)] hover:shadow-[0_0_40px_rgba(240,200,8,0.3)]"
       >
         <ShoppingBag className="w-5 h-5 fill-black" />
-        {selectedSize ? "Deploy to Cart" : "Select Size to Deploy"}
+        {selectedSize ? `Deploy to Cart (${quantity})` : "Select Size to Deploy"}
       </button>
 
       {/* Trust Metrics */}
