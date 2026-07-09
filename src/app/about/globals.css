@@ -478,7 +478,7 @@ section.six {
     border-radius: 50%;
     overflow: hidden;
     border: 2px solid rgba(0,0,0,0.1);
-    filter: grayscale(100%);
+    filter: grayscale(0%);
     transition: filter 0.3s ease;
 }
 

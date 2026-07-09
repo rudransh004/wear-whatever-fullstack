@@ -184,8 +184,8 @@
 
 .about-wrapper .founders-row { display: flex; flex-direction: row; flex-wrap: wrap; gap: 1.5rem; margin-top: 0.5rem; }
 .about-wrapper .founder-profile { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; }
-.about-wrapper .founder-avatar { width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; overflow: hidden; border: 2px solid rgba(0,0,0,0.1); filter: grayscale(100%); transition: filter 0.3s ease; }
-.about-wrapper .founder-profile:hover .founder-avatar { filter: grayscale(0%); }
+.about-wrapper .founder-avatar { width: 60px; height: 60px; flex-shrink: 0; border-radius: 50%; overflow: hidden; border: 2px solid rgba(0,0,0,0.1);  transition: filter 0.3s ease; filter: grayscale(0%); }
+.about-wrapper .founder-profile:hover .founder-avatar { /* filter: grayscale(0%); */ }
 .about-wrapper .founder-details { display: flex; flex-direction: column; line-height: 1.2; }
 .about-wrapper .founder-name { font-weight: 800; color: #000; font-size: 0.95rem; white-space: nowrap; }
 .about-wrapper .founder-role { font-size: 0.7rem; font-family: var(--font-geist-mono), monospace; color: rgba(0,0,0,0.6); text-transform: uppercase; letter-spacing: 0.1em; }

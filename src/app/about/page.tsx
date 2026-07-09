@@ -1,9 +1,10 @@
 "use client";
 
+import { subscribeToSyndicate } from "../actions/subscribe";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap"; 
-import { useEffect, useRef } from "react"; 
+import { useEffect, useRef, useState } from "react"; 
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react"; 
 import { ReactLenis } from "lenis/react";
@@ -15,6 +16,28 @@ gsap.registerPlugin(ScrollTrigger);
 export default function AboutPage() {
   const lenisRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [email, setEmail] = useState("");
+  const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "loading" | "success">("idle");
+
+  const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setSubscribeStatus("loading");
+    
+    const formData = new FormData();
+    formData.append("email", email);
+
+    const result = await subscribeToSyndicate(formData);
+
+    if (result.success) {
+      setSubscribeStatus("success");
+      setEmail(""); // Clear input on success
+    } else {
+      setSubscribeStatus("idle");
+      alert(result.error || "System failure. Try again.");
+    }
+  };
 
   useEffect(() => {
     function update(time: number) {
@@ -288,18 +311,26 @@ export default function AboutPage() {
             <h2 className="footer-title">
               JOIN OUR<br/>SYNDICATE
             </h2>
-            <div className="footer-form">
-              <input type="email" placeholder="your@email.com" />
-              <button>Subscribe</button>
-            </div>
+            <form className="footer-form" onSubmit={handleSubscribe}>
+              <input 
+                type="email" 
+                placeholder="your@email.com" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={subscribeStatus === 'loading'}
+              />
+              <button type="submit" disabled={subscribeStatus === 'loading'}>
+                {subscribeStatus === 'idle' ? 'Subscribe' : subscribeStatus === 'loading' ? 'Routing...' : 'Secured.'}
+              </button>
+            </form>
           </div>
 
           <div className="spot-label">SPOT US ON</div>
 
           <div className="footer-banner">
-            <Link href="#" className="footer-banner-item"><span>✦</span> Instagram</Link>
+            <Link href="https://www.instagram.com/wearwhatever.in?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" className="footer-banner-item"><span>✦</span> Instagram</Link>
             <Link href="#" className="footer-banner-item"><span>✦</span> LinkedIn</Link>
-            <Link href="#" className="footer-banner-item"><span>✦</span> Twitter</Link>
+            {/*<Link href="#" className="footer-banner-item"><span>✦</span> Twitter</Link>*/}
             <Link href="#" className="footer-banner-item"><span>✦</span> WhatsApp</Link>
           </div>
 
@@ -330,17 +361,22 @@ export default function AboutPage() {
               <div className="founders-row">
                 <div className="founder-profile">
                   <div className="founder-avatar">
-                    <Image src="/founder.jpeg" alt="Rudransh Garg" width={40} height={40} />
+                    
+                      <Image src="/founder.jpg" alt="Rudransh Garg" width={40} height={40} />
+                    
                   </div>
                   <div className="founder-details">
+                    <Link href="https://portfolio-rudransh-garg.lovable.app/">
                     <span className="founder-name">Rudransh Garg</span>
+                    </Link>
                     <span className="founder-role">Founder</span>
+                    
                   </div>
                 </div>
 
                 <div className="founder-profile">
                   <div className="founder-avatar">
-                    <Image src="/founder-rishindera.jpeg" alt="Rishindera Rao" width={40} height={40} />
+                    <Image src="/founder2.jpeg" alt="Rishindera Rao" width={40} height={40} />
                   </div>
                   <div className="founder-details">
                     <span className="founder-name">Rishindera Rao</span>
@@ -350,7 +386,7 @@ export default function AboutPage() {
 
                 <div className="founder-profile">
                   <div className="founder-avatar">
-                    <Image src="/suhani.jpeg" alt="Suhani Sadh" width={40} height={40} />
+                    <Image src="/founder-rishindera.jpeg" alt="Suhani Sadh" width={40} height={40} />
                   </div>
                   <div className="founder-details">
                     <span className="founder-name">Suhani Sadh</span>
@@ -365,11 +401,6 @@ export default function AboutPage() {
             <div className="marquee-wrapper">
               <div className="animate-marquee">WEAR WHATEVER • FIND YOUR INSIDE • </div>
               <div className="animate-marquee">WEAR WHATEVER • FIND YOUR INSIDE • </div>
-            </div>
-
-            <div className="copyright-bar">
-              <span>Copyright © WEAR WHATEVER 2026</span>
-              <button className="up-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>^</button>
             </div>
           </div>
         </div>

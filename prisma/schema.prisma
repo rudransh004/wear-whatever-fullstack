@@ -57,6 +57,11 @@ model OrderItem {
   order     Order  @relation(fields: [orderId], references: [id])
 }
 
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
 
 model Wishlist {
   id        String   @id @default(cuid())
