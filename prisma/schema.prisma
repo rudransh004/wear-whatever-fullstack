@@ -39,7 +39,14 @@ model Order {
   customerName  String
   customerEmail String
   address       String
-  totalAmount   Float
+  
+  // NEW: Pricing Breakdown
+  subtotal      Float       @default(0)// Sum of items before discount/shipping
+  discount      Float       @default(0)
+  deliveryFee   Float       @default(0)
+  totalAmount   Float       // Final amount paid
+  couponCode    String?     // Which coupon was used (if any)
+  
   status        String      @default("Processing")
   items         OrderItem[]
   createdAt     DateTime    @default(now())
@@ -72,4 +79,15 @@ model Wishlist {
   createdAt DateTime @default(now())
 
   @@unique([userId, productId]) // 👈 Prevents duplicate wishlisting of the same item
+}
+
+// NEW MODEL
+model Coupon {
+  id            String   @id @default(cuid())
+  code          String   @unique
+  discountType  String   // "PERCENTAGE" (e.g., 10%) or "FLAT" (e.g., ₹500)
+  discountValue Float
+  isActive      Boolean  @default(true)
+  minCartValue  Float    @default(0) // e.g., Must spend ₹2000 to use this
+  createdAt     DateTime @default(now())
 }

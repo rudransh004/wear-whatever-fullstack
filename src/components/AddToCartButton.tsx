@@ -15,8 +15,9 @@ export default function AddToCartButton({ product }: { product: any }) {
         id: product.id,
         name: product.name,
         price: product.price,
-        image: product.images[0],
-        quantity: 1
+        image: product.images && product.images.length > 0 ? product.images[0] : '/blank-tee.png',
+        quantity: 1,
+        size: 'M'
       });
       setIsAdding(false);
       openCart();

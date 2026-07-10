@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { LayoutDashboard, ShoppingCart, Package, Users, LogOut, Mail } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, Package, Users, LogOut, Mail, Tag } from "lucide-react";
 
 
 // Absolute cache override for Vercel Edge network
@@ -45,6 +45,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </Link>
           <Link href="/admin/marketing" className="flex items-center gap-3 p-3 text-zinc-400 hover:text-black hover:bg-[#f0c808] transition-all">
             <Mail className="w-4 h-4" /> Syndicate Leads
+          </Link>
+          <Link href="/admin/coupons" className="flex items-center gap-3 p-3 text-zinc-400 hover:text-black hover:bg-[#f0c808] transition-all">
+            <Tag className="w-4 h-4" /> Promo Engine
           </Link>
         </nav>
 

@@ -22,6 +22,8 @@ interface CartStore {
   updateQuantity: (cartItemId: string, quantity: number) => void;
   updateSize: (cartItemId: string, newSize: string) => void;
   clearCart: () => void;
+  appliedCoupon: { code: string; type: string; value: number } | null;
+  setCoupon: (coupon: { code: string; type: string; value: number } | null) => void;
 }
 
 export const useCart = create<CartStore>()(
@@ -29,6 +31,9 @@ export const useCart = create<CartStore>()(
     (set) => ({
       items: [],
       isOpen: false,
+      appliedCoupon: null, //new
+
+      setCoupon: (coupon) => set({ appliedCoupon: coupon}),
       openCart: () => set({ isOpen: true }),
       closeCart: () => set({ isOpen: false }),
 
@@ -114,7 +119,7 @@ export const useCart = create<CartStore>()(
         };
       }),
 
-      clearCart: () => set({ items: [] }),
+      clearCart: () => set({ items: [], appliedCoupon: null}),
     }),
     { name: 'cart-storage' }
   )

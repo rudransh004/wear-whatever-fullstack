@@ -4,15 +4,28 @@ import { useCart } from "../../lib/store";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-// @ts-ignore: No types available for this package
+// @ts-ignore
 import { load } from "@cashfreepayments/cashfree-js";
 
 export default function CheckoutPage() {
-  const { items, clearCart } = useCart();
+  const { items, appliedCoupon, clearCart } = useCart();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   
-  const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  // MATCHING THE CART MATH EXACTLY
+  const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const deliveryFee = subtotal > 0 && subtotal < 1499 ? 50 : 0;
+  
+  let discountAmount = 0;
+  if (appliedCoupon) {
+    if (appliedCoupon.type === "PERCENTAGE") {
+      discountAmount = (subtotal * appliedCoupon.value) / 100;
+    } else {
+      discountAmount = appliedCoupon.value;
+    }
+  }
+  
+  const finalTotal = Math.max(0, subtotal + deliveryFee - discountAmount);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,7 +42,7 @@ export default function CheckoutPage() {
         address: formData.get("address"),
       },
       items: items,
-      total: total
+      couponCode: appliedCoupon?.code || null // Sends the promo code to the backend for secure validation
     };
 
     try {
@@ -42,19 +55,16 @@ export default function CheckoutPage() {
       const data = await response.json();
 
       if (response.ok && data.success && data.payment_session_id) {
-        
-        // EXPLICIT ENVIRONMENT CHECK FOR FRONTEND
         const envMode = process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT === "PRODUCTION" ? "production" : "sandbox";
-        
-        const cashfree = await load({
-          mode: envMode,
-        });
+        const cashfree = await load({ mode: envMode });
 
         let checkoutOptions = {
           paymentSessionId: data.payment_session_id,
           redirectTarget: "_self",
         };
 
+        // Wipe the cart clean upon successful handoff to payment gateway
+        clearCart(); 
         cashfree.checkout(checkoutOptions);
         
       } else {
@@ -69,7 +79,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <main className="min-h-screen bg-black pt-32 pb-20 px-6">
+    <main className="min-h-screen bg-[#020202] pt-32 pb-20 px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
         
         {/* Shipping Form */}
@@ -79,12 +89,13 @@ export default function CheckoutPage() {
           </h1>
           
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input name="name" required placeholder="FULL NAME" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" />
-            <input name="email" type="email" required placeholder="EMAIL ADDRESS" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" />
-            <input name="phone" type="tel" required minLength={10} maxLength={10} placeholder="PHONE NUMBER (10 DIGITS)" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all uppercase" />
-            <textarea name="address" required placeholder="COMPLETE SHIPPING ADDRESS" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-yellow-500 outline-none transition-all h-32 uppercase" />
-            <button type="submit" disabled={loading || items.length === 0} className="w-full bg-yellow-500 text-black py-5 font-black uppercase hover:bg-yellow-400 transition-all disabled:opacity-50">
-              {loading ? "INITIALIZING SECURE GATEWAY..." : "PAY SECURELY"}
+            <input name="name" required placeholder="FULL NAME" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-[#f0c808] outline-none transition-all uppercase" />
+            <input name="email" type="email" required placeholder="EMAIL ADDRESS" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-[#f0c808] outline-none transition-all uppercase" />
+            <input name="phone" type="tel" required minLength={10} maxLength={10} placeholder="PHONE NUMBER (10 DIGITS)" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-[#f0c808] outline-none transition-all uppercase" />
+            <textarea name="address" required placeholder="COMPLETE SHIPPING ADDRESS" className="w-full bg-zinc-950 border border-white/10 p-4 text-white font-mono focus:border-[#f0c808] outline-none transition-all h-32 uppercase" />
+            
+            <button type="submit" disabled={loading || items.length === 0} className="w-full bg-[#f0c808] text-black py-5 font-black uppercase tracking-widest hover:bg-white transition-all disabled:opacity-50 mt-4">
+              {loading ? "INITIALIZING SECURE GATEWAY..." : `PAY SECURELY ₹${finalTotal}`}
             </button>
           </form>
         </div>
@@ -94,27 +105,47 @@ export default function CheckoutPage() {
           <h2 className="text-xl font-bold text-white mb-8 uppercase tracking-widest border-b border-white/10 pb-4">
             Bag Summary
           </h2>
-          <div className="space-y-6 mb-8 max-h-[400px] overflow-y-auto">
+          
+          <div className="space-y-6 mb-8 max-h-[400px] overflow-y-auto pr-2">
             {items.map((item) => (
-              <div key={item.id} className="flex justify-between items-center">
+              <div key={item.cartItemId || item.id} className="flex justify-between items-center">
                 <div className="flex gap-4 items-center">
-                  <div className="relative h-12 w-12 bg-zinc-900 border border-white/5 overflow-hidden">
-                    <Image src={item.image || "/blank-image.png"} alt={item.name || "Product Image"} fill className="object-cover" />
+                  <div className="relative h-16 w-12 bg-zinc-900 border border-white/5 overflow-hidden">
+                    <Image src={item.image || "/blank-image.png"} alt={item.name} fill className="object-cover" />
                   </div>
                   <div>
-                    <p className="text-white text-xs font-bold uppercase">{item.name}</p>
-                    <p className="text-zinc-500 font-mono text-[10px]">QTY: {item.quantity}</p>
+                    <p className="text-white text-xs font-bold uppercase leading-tight max-w-[150px] truncate">{item.name}</p>
+                    <p className="text-zinc-500 font-mono text-[10px] mt-1">SIZE: {item.size || 'M'} | QTY: {item.quantity}</p>
                   </div>
                 </div>
                 <span className="text-white font-mono text-sm">₹{item.price * item.quantity}</span>
               </div>
             ))}
           </div>
-          <div className="flex justify-between items-end border-t border-white/10 pt-6">
-            <span className="text-zinc-500 font-mono uppercase text-[10px]">Total</span>
-            <span className="text-4xl font-mono text-white tracking-tighter">₹{total}</span>
+
+          <div className="space-y-3 font-mono text-xs border-t border-white/10 pt-6">
+            <div className="flex justify-between text-zinc-400">
+              <span>Subtotal (GST Included)</span>
+              <span>₹{subtotal}</span>
+            </div>
+            <div className="flex justify-between text-zinc-400">
+              <span>Delivery Fee</span>
+              <span>{deliveryFee === 0 ? "FREE" : `₹${deliveryFee}`}</span>
+            </div>
+            {appliedCoupon && (
+              <div className="flex justify-between text-green-500">
+                <span>Discount ({appliedCoupon.code})</span>
+                <span>-₹{Math.round(discountAmount)}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-between items-end border-t border-white/10 pt-6 mt-4">
+            <span className="text-zinc-500 font-mono uppercase text-[10px] tracking-widest">Final Total</span>
+            <span className="text-4xl font-mono text-white tracking-tighter">₹{finalTotal}</span>
           </div>
         </div>
+
       </div>
     </main>
   );
