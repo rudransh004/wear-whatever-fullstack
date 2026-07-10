@@ -1,29 +1,62 @@
 import prisma from "../../../lib/prisma";
 import { notFound } from "next/navigation";
-import ProductActions from "../../../components/ProductActions"; // UPDATED IMPORT
+import ProductActions from "../../../components/ProductActions"; 
 import PDPGallery from "../../../components/PDPGallery"; 
 import Navbar from "../../../components/NavBar";
+import ReviewsSection from "../../../components/ReviewsSection"; // NEW IMPORT
+import { createClient } from "../../../utils/supabase/server"; // NEW IMPORT
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
+  // 1. Fetch Product WITH its verified reviews attached
   const product = await prisma.product.findUnique({
     where: { id: id },
+    include: {
+      reviews: {
+        include: { user: { select: { email: true } } }, // Get the reviewer's email
+        orderBy: { createdAt: 'desc' }
+      }
+    }
   });
 
   if (!product) notFound();
+
+  // 2. Pre-format dates for hydration safety
+  const formattedReviews = product.reviews.map(rev => ({
+    ...rev,
+    displayDate: new Intl.DateTimeFormat('en-IN', {
+      day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata'
+    }).format(new Date(rev.createdAt))
+  }));
+
+  // 3. SECURE CHECK: Did THIS user buy THIS product?
+  let canReview = false;
+  if (user) {
+    const hasBought = await prisma.orderItem.findFirst({
+      where: {
+        productId: id,
+        order: { userId: user.id }
+      }
+    });
+    // Check if they already reviewed it so we don't show the form unnecessarily
+    const alreadyReviewed = product.reviews.some(r => r.userId === user.id);
+    
+    if (hasBought && !alreadyReviewed) canReview = true;
+  }
 
   return (
     <main className="min-h-screen bg-[#020202] selection:bg-[#f0c808] selection:text-black pt-24 pb-20 overflow-x-hidden">
       
       <Navbar />
 
-      {/* Subtle Studio Background Grids */}
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none z-0"></div>
 
       <div className="relative z-10 max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-12 mt-10">
         
-        {/* Breadcrumb / Category Tracker */}
+        {/* Breadcrumb Tracker */}
         <div className="mb-8 flex items-center gap-4">
            <div className="w-8 h-[1px] bg-[#f0c808]"></div>
            <p className="text-[10px] md:text-xs text-[#f0c808] font-mono uppercase tracking-[0.4em]">
@@ -31,14 +64,12 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
            </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start mb-20">
           
-          {/* LEFT: Interactive Product Gallery */}
           <div className="lg:col-span-7 w-full">
             <PDPGallery images={product.images} productName={product.name} />
           </div>
 
-          {/* RIGHT: Sticky Product Details */}
           <div className="lg:col-span-5 flex flex-col justify-center lg:sticky lg:top-32">
             
             <h1 className="text-5xl md:text-7xl font-black text-white mb-4 uppercase italic tracking-tighter leading-[0.85] drop-shadow-xl">
@@ -58,7 +89,6 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               </p>
             </div>
 
-            {/* INTEGRATED: The professional Size & Cart flow */}
             <ProductActions product={product} />
             
             {/* Brutalist Specs Grid */}
@@ -83,6 +113,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
           </div>
         </div>
+
+        {/* INTEGRATED: The Verified Reviews Engine */}
+        <ReviewsSection productId={product.id} reviews={formattedReviews} canReview={canReview} />
+
       </div>
     </main>
   );

@@ -9,7 +9,7 @@ import { useScrollSpy } from '../hooks/useScrollSpy';
 import { useCart } from '../lib/store'; 
 import { createClient } from '../utils/supabase/client';
 
-import { useWishlist } from "../lib/store";
+import { useWishlist, useFilters } from "../lib/store";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,13 +40,26 @@ export default function Navbar() {
     getUser();
   }, [supabase]);
 
-  // Handle Search Submission
+  const { setSearchQuery: setGlobalSearch } = useFilters(); // Connect to global search state
+
+  // Handle Search Submission (FIXED)
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setGlobalSearch(searchQuery); // Update the global store instantly
       setIsSearchOpen(false);
-      setSearchQuery("");
+      setSearchQuery(""); // Clear local input
+      
+      // Smart scroll to the shop grid so they can see the results
+      if (window.location.pathname === '/' || window.location.pathname === '') {
+        const target = document.getElementById('shop');
+        if (target) {
+          const yOffset = target.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top: yOffset, behavior: 'smooth' });
+        }
+      } else {
+        router.push('/#shop');
+      }
     }
   };
 
