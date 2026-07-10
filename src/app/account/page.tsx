@@ -8,7 +8,7 @@ import Navbar from "../../components/NavBar";
 import Link from "next/link";
 import { ShieldCheck, Package, MapPin, LogOut, ArrowRight, Clock, Fingerprint, Mail, HelpCircle } from "lucide-react";
 
-// Import the new hydrator component
+// Import the hydrator component
 import WishlistHydrator from "../../components/WishlistHydrator";
 
 export default async function AccountPage() {
@@ -23,16 +23,21 @@ export default async function AccountPage() {
 
   // Fetch only orders linked to this specific user ID
   const userOrders = await prisma.order.findMany({
-    where: {
-      userId: user.id
-    },
-    include: {
-      items: true
-    },
-    orderBy: {
-      createdAt: 'desc'
-    }
+    where: { userId: user.id },
+    include: { items: true },
+    orderBy: { createdAt: 'desc' }
   });
+
+  // Strict Server-Side Formatting to prevent Date Hydration fractures
+  const formattedOrders = userOrders.map(order => ({
+    ...order,
+    displayDate: new Intl.DateTimeFormat('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'Asia/Kolkata' 
+    }).format(new Date(order.createdAt))
+  }));
 
   // Fetch the user's wishlist IDs from the database
   const wishlistItems = await prisma.wishlist.findMany({
@@ -40,13 +45,14 @@ export default async function AccountPage() {
     select: { productId: true }
   });
   
-  // Flatten the object array into a simple string array of IDs
-  const wishlistIds = wishlistItems.map((item : any)=> item.productId);
+  const wishlistIds = wishlistItems.map((item: any) => item.productId);
 
   return (
-    <main className="min-h-screen bg-[#020202] text-zinc-400 selection:bg-[#f0c808] selection:text-black pt-32 pb-24 overflow-x-hidden">
+    // THE FIX: suppressHydrationWarning absorbs DOM injection from Extensions & Zustand
+    <main suppressHydrationWarning className="min-h-screen bg-[#020202] text-zinc-400 selection:bg-[#f0c808] selection:text-black pt-32 pb-24 overflow-x-hidden">
       
-      {/* Silently hydrate the Zustand store with the server data */}
+      {/* Securely inject Server State into Client Zustand Store */}
+      <WishlistHydrator userId={user.id} wishlistIds={wishlistIds} />
 
       <Navbar />
       
@@ -75,7 +81,7 @@ export default async function AccountPage() {
         {/* BENTO BOX DASHBOARD */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
-          {/* LEFT COLUMN: Profile & Settings (Spans 4 columns) */}
+          {/* LEFT COLUMN: Profile & Settings */}
           <div className="lg:col-span-4 flex flex-col gap-8">
             
             {/* Identity Card */}
@@ -116,10 +122,9 @@ export default async function AccountPage() {
                 Open Support Ticket <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
-
           </div>
 
-          {/* RIGHT COLUMN: Order History (Spans 8 columns) */}
+          {/* RIGHT COLUMN: Order History */}
           <div className="lg:col-span-8">
             <div className="bg-zinc-950 border border-white/5 p-6 md:p-8 h-full">
               
@@ -128,11 +133,11 @@ export default async function AccountPage() {
                   <Package className="text-[#f0c808] w-6 h-6" /> Order Manifests
                 </h2>
                 <div className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">
-                  Total Records: {userOrders.length}
+                  Total Records: {formattedOrders.length}
                 </div>
               </div>
               
-              {userOrders.length === 0 ? (
+              {formattedOrders.length === 0 ? (
                 /* Empty State */
                 <div className="py-20 text-center flex flex-col items-center justify-center">
                   <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-6">
@@ -149,7 +154,7 @@ export default async function AccountPage() {
               ) : (
                 /* Order List */
                 <div className="space-y-6">
-                  {userOrders.map((order : any) => (
+                  {formattedOrders.map((order: any) => (
                     <div key={order.id} className="bg-black border border-white/10 p-6 flex flex-col xl:flex-row justify-between gap-8 hover:border-[#f0c808]/50 transition-colors group">
                       
                       {/* Left: Order Info & Images */}
@@ -157,7 +162,7 @@ export default async function AccountPage() {
                         <div className="flex flex-wrap items-center gap-4 mb-4">
                           <p className="text-[#f0c808] font-mono text-[10px] uppercase tracking-widest">REF: {order.id.substring(0, 12)}...</p>
                           <p className="text-zinc-600 font-mono text-[10px] uppercase flex items-center gap-1">
-                            <Clock className="w-3 h-3" /> {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            <Clock className="w-3 h-3" /> {order.displayDate}
                           </p>
                         </div>
 

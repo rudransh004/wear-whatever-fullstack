@@ -102,6 +102,7 @@ export default function TermsOfServicePage() {
                 <p className="font-bold text-white">Wear Whatever Legal Division</p>
                 <p>Email: support.wearwhatever@gmail.com</p>
                 <p>Support: support.wearwhatever@gmail.com</p>
+                <p>Phone:+91 8755980102</p>
               </div>
             </div>
           </section>

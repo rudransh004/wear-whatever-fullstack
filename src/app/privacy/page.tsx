@@ -108,6 +108,7 @@ export default function PrivacyPolicyPage() {
                 <p className="font-bold text-white">Wear Whatever Security & Privacy Uplink</p>
                 <p>Email: support.wearwhatever@gmail.com</p>
                 <p>Support: support.wearwhatever@gmail.com</p>
+                <p>Phone:+91 8755980102</p>
               </div>
             </div>
           </section>

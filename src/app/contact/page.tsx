@@ -64,8 +64,8 @@ export default function ContactPage() {
                 <Mail className="text-[#f0c808] w-5 h-5 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-zinc-500 mb-1 text-[10px]">Direct Inbox</p>
-                  <a href="mailto:wearwhatever2210@gmail.com" className="text-white hover:text-[#f0c808] transition-colors font-bold">
-                    wearwhatever2210@gmail.com
+                  <a href="mailto:support.wearwhatever@gmail.com" className="text-white hover:text-[#f0c808] transition-colors font-bold">
+                    support.wearwhatever@gmail.com
                   </a>
                 </div>
               </div>

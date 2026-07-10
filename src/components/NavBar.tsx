@@ -9,6 +9,8 @@ import { useScrollSpy } from '../hooks/useScrollSpy';
 import { useCart } from '../lib/store'; 
 import { createClient } from '../utils/supabase/client';
 
+import { useWishlist } from "../lib/store";
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -26,6 +28,8 @@ export default function Navbar() {
 
   // Calculate live cart count
   const itemCount = items.reduce((acc: number, item: any) => acc + item.quantity, 0);
+
+  const { wishlistIds } = useWishlist();
 
   useEffect(() => {
     setMounted(true);
@@ -118,8 +122,15 @@ export default function Navbar() {
                <User size={20} />
             </Link>
 
-            <Link href="/wishlist" className="hover:text-[#f0c808] transition-colors relative" title="Wishlist">
-              <Heart size={20} />
+            <Link href="/wishlist" className="relative group">
+              <Heart className="w-5 h-5 text-white" />
+  
+              {/* The Dynamic Counter Badge */}
+              {wishlistIds.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-[#f0c808] text-black text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full shadow-[0_0_10px_rgba(240,200,8,0.3)]">
+                  {wishlistIds.length}
+                </span>
+              )}
             </Link>
 
             {/* Live Cart Integration */}
