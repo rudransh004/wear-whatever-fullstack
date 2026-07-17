@@ -84,7 +84,7 @@ export default function ContactPage() {
                 <MapPin className="text-[#f0c808] w-5 h-5 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-zinc-500 mb-1 text-[10px]">Headquarters</p>
-                  <p className="text-white font-bold">NEW DELHI, INDIA</p>
+                  <p className="text-white font-bold">231, Diputy Gunj, Bulandshahr-203001, Uttar Pradesh, India</p>
                 </div>
               </div>
             </div>
