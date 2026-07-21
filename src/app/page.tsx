@@ -5,11 +5,17 @@ import Navbar from "../components/NavBar";
 import InteractiveHero from "../components/InteractiveHero";
 import HeroSlider from "../components/HeroSlider"; 
 import { Zap } from "lucide-react";
+import Chatbot from "../components/Chatbot";
+import { createClient } from "../utils/supabase/server"; // <-- ADD THIS IMPORT
 
 export default async function Home() {
   const products = await prisma.product.findMany({
     orderBy: { createdAt: 'desc' }
   });
+
+  // <-- FETCH SUPABASE SESSION TO PASS TO CHATBOT -->
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
   // The Marquee Content
   const announcementText = "DROP 01: THE VOID IS LIVE • FREE EXPRESS SHIPPING OVER ₹1,999 • MINT YOUR 1-OF-1 CUSTOM PIECE NOW •";
@@ -22,7 +28,6 @@ export default async function Home() {
       {/* KINETIC ANNOUNCEMENT RIBBON */}
       <div className="w-full bg-[#f0c808] text-black py-3 font-mono text-xs font-black uppercase tracking-widest mt-16 md:mt-20 relative z-30 shadow-md overflow-hidden">
         <div className="flex animate-marquee whitespace-nowrap">
-          {/* We map twice to ensure the loop is seamless */}
           {[1, 2].map((i) => (
             <div key={i} className="flex items-center gap-12 shrink-0 px-6">
               <span className="flex items-center gap-2"><Zap className="w-3.5 h-3.5 fill-black" /> {announcementText}</span>
@@ -58,6 +63,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* CHATBOT COMPONENT WITH AUTH PROP */}
+      <Chatbot isLoggedIn={!!user} />
 
     </main>
   );

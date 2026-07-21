@@ -28,12 +28,17 @@ model Product {
 }
 
 model User {
-  id     String  @id @default(cuid())
-  email  String  @unique
-  name   String?
-  orders Order[]
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  
+  // NEW: AI Chatbot Token System
+  aiCredits Int      @default(10)    // Every new user gets 10 free messages
+  isProUser Boolean  @default(false) // Set to true if they buy a subscription
+
+  orders    Order[]
   wishlist  Wishlist[]
-  reviews Review[] 
+  reviews   Review[] 
 }
 
 model Order {
