@@ -7,8 +7,11 @@ import NavBar from "../components/NavBar";
 import CartSidebar from "../components/CartSidebar";
 import Footer from "../components/Footer"; // NEW: Import the Footer
 
+
 import { Inter } from "next/font/google";
 import WishlistProvider from "../components/WishlistProvider";
+
+import {ThemeProvider} from "../components/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,6 +31,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0a0a0a] text-white min-h-screen flex flex-col`}
         suppressHydrationWarning={true}

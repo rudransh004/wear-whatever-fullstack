@@ -7,88 +7,90 @@ import WatchMenu from './WatchMenu';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// 10 High-Quality images per category
-// Optimized Local Category Arrays (Add up to 10 images per category array)
+// =========================================================
+// 📸 CURATED EDITORIAL STREETWEAR ARRAYS
+// =========================================================
 const galleryData = [
-  // Index 0: Category 1 Images
+  // 0: Supreme Edition (Red/Black/Streetwear)
   [
-    '/gallery/cat0-1.png',
-    '/gallery/cat0-2.png',
-    '/gallery/cat0-3.jpg',
-    '/gallery/cat0-4.png',
-    '/gallery/cat0-5.png',
-    '/gallery/cat0-6.png',
-    '/gallery/cat0-7.png',
-    '/gallery/cat0-8.png',
-    '/gallery/cat0-9.png',
-    '/gallery/cat0-10.png',
+    'https://images.unsplash.com/photo-1529139574466-a30ab75225a8?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1550614000-4b95d46698dc?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1511511450062-85a06822c9be?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1552374196-1ab2fa1c5dde?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1509631179647-0c446ca396bb?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1512353087810-254cb9859f69?q=80&w=800&auto=format&fit=crop',
   ],
-  // Index 1: Category 2 Images
+  // 1: Epic Thread (Neon/Cyber/Techwear)
   [
-    '/gallery/cat1-1.png',
-    '/gallery/cat1-2.png',
-    '/gallery/cat1-3.png',
-    '/gallery/cat1-4.png',
-    '/gallery/cat1-5.png',
-    '/gallery/cat1-6.png',
-    '/gallery/cat1-7.png',
-    '/gallery/cat1-8.png',
-    '/gallery/cat1-9.png',
-    '/gallery/cat1-10.png',
+    'https://images.unsplash.com/photo-1492336647228-56455171fc9c?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1523398002811-999aa8b9581e?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1618354691458-1f1f7d5c5894?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1527718641151-1a4034870f7b?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1588117305388-c2631a279f82?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1610410488691-6fa780d60d3c?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800&auto=format&fit=crop',
   ],
-  // Index 2: Category 3 Images
+  // 2: WearWhatever Premium (Yellow/Black/Heavyweight)
   [
-    '/gallery/cat2-1.png',
-    '/gallery/cat2-2.png',
-    '/gallery/cat2-3.jpg',
-    '/gallery/cat2-4.png',
-    '/gallery/cat2-5.png',
-    '/gallery/cat2-6.png',
-    '/gallery/cat2-7.png',
-    '/gallery/cat2-8.png',
-    '/gallery/cat2-9.png',
-    '/gallery/cat2-10.png',
+    'https://images.unsplash.com/photo-1485231127000-71a69070ea83?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1488161628813-04466f872507?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1517409278775-db632d4b4334?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1502759683299-cdcd6974244f?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1515347619152-6cf7e96b3d5b?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1617391104684-25e24bcfdb56?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1549448107-1b0b533d7b93?q=80&w=800&auto=format&fit=crop',
   ],
-  // Index 3: Category 4 Images
+  // 3: All Products (General High Fashion/Graphic)
   [
-    '/gallery/cat3-1.png',
-    '/gallery/cat3-2.png',
-    '/gallery/cat3-3.png',
-    '/gallery/cat3-4.png',
-    '/gallery/cat3-5.png',
-    '/gallery/cat3-6.png',
-    '/gallery/cat3-7.png',
-    '/gallery/cat3-8.png',
-    '/gallery/cat3-9.png',
-    '/gallery/cat3-10.png',
+    'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1536766820879-059fec98ec0a?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1523398002811-999aa8b9581e?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1603252109303-2751441dd157?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1550614000-4b95d46698dc?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1588117305388-c2631a279f82?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1492336647228-56455171fc9c?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=800&auto=format&fit=crop',
   ],
-  // Index 4: Category 5 Images
+  // 4: Special Customs (Edgy/Avant Garde)
   [
-    '/gallery/cat4-1.png',
-    '/gallery/cat4-2.png',
-    '/gallery/cat4-3.png',
-    '/gallery/cat4-4.png',
-    '/gallery/cat4-5.png',
-    '/gallery/cat4-6.png',
-    '/gallery/cat4-7.png',
-    '/gallery/cat4-8.png',
-    '/gallery/cat4-9.png',
-    '/gallery/cat4-10.png',
+    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1552374196-1ab2fa1c5dde?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1485231127000-71a69070ea83?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1509631179647-0c446ca396bb?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1618354691458-1f1f7d5c5894?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1511511450062-85a06822c9be?q=80&w=800&auto=format&fit=crop',
   ],
-  // Index 5: Category 6 Images
+  // 5: End of Season Sale (Moody/Action/Models)
   [
-    '/gallery/cat5-1.png',
-    '/gallery/cat5-2.png',
-    '/gallery/cat5-3.png',
-    '/gallery/cat5-4.png',
-    '/gallery/cat5-5.png',
-    '/gallery/cat5-6.png',
-    '/gallery/cat5-7.png',
-    '/gallery/cat5-8.png',
-    '/gallery/cat5-9.png',
-    '/gallery/cat5-10.png',
+    'https://images.unsplash.com/photo-1512353087810-254cb9859f69?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1527718641151-1a4034870f7b?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1515347619152-6cf7e96b3d5b?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1617391104684-25e24bcfdb56?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1549448107-1b0b533d7b93?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1536766820879-059fec98ec0a?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1603252109303-2751441dd157?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800&auto=format&fit=crop',
   ],
 ];
+
 // =========================================================
 // 🎬 ENHANCED LIGHTING PROFILES
 // =========================================================

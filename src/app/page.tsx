@@ -6,18 +6,17 @@ import InteractiveHero from "../components/InteractiveHero";
 import HeroSlider from "../components/HeroSlider"; 
 import { Zap } from "lucide-react";
 import Chatbot from "../components/Chatbot";
-import { createClient } from "../utils/supabase/server"; // <-- ADD THIS IMPORT
+import { createClient } from "../utils/supabase/server";
+import DotGrid from "../components/DotGrid"; // <-- NEW IMPORT
 
 export default async function Home() {
   const products = await prisma.product.findMany({
     orderBy: { createdAt: 'desc' }
   });
 
-  // <-- FETCH SUPABASE SESSION TO PASS TO CHATBOT -->
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  // The Marquee Content
   const announcementText = "DROP 01: THE VOID IS LIVE • FREE EXPRESS SHIPPING OVER ₹1,999 • MINT YOUR 1-OF-1 CUSTOM PIECE NOW •";
 
   return (
@@ -43,9 +42,29 @@ export default async function Home() {
         <InteractiveHero />
       </div>
 
-      <section id="shop" className="w-full bg-[#0a0a0a] pt-20 pb-24 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6 border-b border-white/10 pb-4">
+      <section id="shop" className="w-full bg-[#0a0a0a] pt-20 pb-24 relative z-10 overflow-hidden">
+        
+        {/* NEW INTERACTIVE BACKGROUND */}
+        <div className="absolute inset-0 z-0 opacity-80 pointer-events-auto">
+          <DotGrid
+            dotSize={5}
+            gap={15}
+            baseColor="#1a1a1a"    /* Dark grey to blend with #0a0a0a */
+            activeColor="#f0c808"  /* Brand Yellow */
+            proximity={120}
+            shockRadius={250}
+            shockStrength={5}
+            resistance={750}
+            returnDuration={1.5}
+          />
+        </div>
+
+        {/* Existing Content wrapped in relative z-10 so it sits ABOVE the grid */}
+        <div className="max-w-7xl mx-auto px-6 relative z-10 pointer-events-none">
+          {/* Note: pointer-events-none on the wrapper ensures the mouse hits the canvas behind it, 
+              but we add pointer-events-auto back to the actual UI elements so buttons still work! */}
+          
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6 border-b border-white/10 pb-4 pointer-events-auto">
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
@@ -58,13 +77,12 @@ export default async function Home() {
             </div>
           </div>
           
-          <div className="min-h-[50vh] mt-10">
+          <div className="min-h-[50vh] mt-10 pointer-events-auto">
             <ProductGrid initialProducts={products} />
           </div>
         </div>
       </section>
 
-      {/* CHATBOT COMPONENT WITH AUTH PROP */}
       <Chatbot isLoggedIn={!!user} />
 
     </main>

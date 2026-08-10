@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
 import { createClient } from "../../../utils/supabase/server";
+import crypto from "crypto"; // Required for PayU Hashing
 
 export async function POST(req: Request) {
   try {
@@ -9,10 +10,8 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { customer, items, couponCode } = body;
 
-    // 1. SECURE PRICING CALCULATION (Ignore frontend totals)
+    // 1. SECURE PRICING CALCULATION
     let secureSubtotal = 0;
-
-    // Fetch actual prices from Database to prevent frontend hacking
     for (const item of items) {
       const dbProduct = await prisma.product.findUnique({ where: { id: item.id } });
       if (!dbProduct) throw new Error(`Product ${item.id} not found.`);
@@ -37,9 +36,9 @@ export async function POST(req: Request) {
 
     // 4. FINAL MATH
     let secureTotal = secureSubtotal + secureDeliveryFee - secureDiscount;
-    secureTotal = Math.max(0, secureTotal); // Prevents negative totals
+    secureTotal = Math.max(0, secureTotal); 
 
-    // 5. Create Order in Database WITH Pricing Breakdown
+    // 5. Create Order in Database
     const newOrder = await prisma.order.create({
       data: {
         customerName: customer.name,
@@ -54,7 +53,7 @@ export async function POST(req: Request) {
         items: { 
           create: items.map((item: any) => ({
             productId: item.id, 
-            name: `${item.name} (Size: ${item.size})`, // Ensure size is saved in order history!
+            name: `${item.name} (Size: ${item.size || 'M'})`, 
             price: item.price, 
             quantity: item.quantity,
           }))
@@ -62,46 +61,49 @@ export async function POST(req: Request) {
       },
     });
 
-    // 6. Cashfree Integration
-    const cashfreeEnv = process.env.CASHFREE_ENVIRONMENT === "PRODUCTION" ? "PRODUCTION" : "SANDBOX";
-    const cashfreeEndpoint = cashfreeEnv === "PRODUCTION" ? "https://api.cashfree.com/pg/orders" : "https://sandbox.cashfree.com/pg/orders";
-    const baseUrl = cashfreeEnv === "PRODUCTION" ? "https://www.wearwhatever.in" : "http://localhost:3000";
+    // 6. PAYU CRYPTOGRAPHIC INTEGRATION
+    const payuEnv = process.env.PAYU_ENVIRONMENT || "TEST";
+    const payuUrl = payuEnv === "PROD" ? "https://secure.payu.in/_payment" : "https://test.payu.in/_payment";
+    const payuKey = process.env.PAYU_MERCHANT_KEY!;
+    const payuSalt = process.env.PAYU_MERCHANT_SALT!;
+    
+    // 💡 THE FIX: Dynamically reconstruct the URL from the browser's request headers
+    const protocol = req.headers.get("x-forwarded-proto") || "http";
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000";
+    const baseUrl = `${protocol}://${host}`;
 
-    const response = await fetch(cashfreeEndpoint, {
-      method: "POST",
-      headers: {
-        "x-client-id": process.env.CASHFREE_APP_ID!.trim(),
-        "x-client-secret": process.env.CASHFREE_SECRET_KEY!.trim(),
-        "x-api-version": "2023-08-01",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        order_amount: secureTotal,
-        order_currency: "INR",
-        order_id: newOrder.id.toString(),
-        customer_details: {
-          customer_id: customer.email.replace(/[^a-zA-Z0-9]/g, ''),
-          customer_name: customer.name,
-          customer_email: customer.email,
-          customer_phone: customer.phone || "9999999999",
-        },
-        order_meta: {
-          return_url: `${baseUrl}/order-success?order_id=${newOrder.id}`,
-          notify_url: `${baseUrl}/api/webhook/cashfree`
-        }
-      }),
-    });
+    // Format Data for PayU
+    const txnid = newOrder.id.toString();
+    const amount = secureTotal.toString(); // PayU expects a string
+    const productinfo = "WearWhatever_Order";
+    const firstname = customer.name.split(" ")[0]; // PayU prefers first name
+    const email = customer.email;
+    const phone = customer.phone || "9999999999";
 
-    const data = await response.json();
+    // PAYU HASHING FORMULA: key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||salt
+    // We leave udf1 to udf5 blank (hence the consecutive pipes ||||||)
+    const hashString = `${payuKey}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|||||||||||${payuSalt}`;
+    
+    // Generate SHA-512 Hash
+    const hash = crypto.createHash("sha512").update(hashString).digest("hex");
 
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to create order");
-    }
-
+    // Return the parameters to the frontend so it can construct the form
     return NextResponse.json({
       success: true,
-      payment_session_id: data.payment_session_id,
-      orderId: newOrder.id
+      payuUrl: payuUrl,
+      paymentData: {
+        key: payuKey,
+        txnid: txnid,
+        amount: amount,
+        productinfo: productinfo,
+        firstname: firstname,
+        email: email,
+        phone: phone,
+        // 🚀 DYNAMIC URLS IN ACTION!
+        surl: `${baseUrl}/api/payu/success`,
+        furl: `${baseUrl}/api/payu/failure`,
+        hash: hash,
+      }
     });
 
   } catch (error: any) {

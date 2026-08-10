@@ -4,8 +4,6 @@ import { useCart } from "../../lib/store";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-// @ts-ignore
-import { load } from "@cashfreepayments/cashfree-js";
 
 export default function CheckoutPage() {
   const { items, appliedCoupon, clearCart } = useCart();
@@ -42,10 +40,11 @@ export default function CheckoutPage() {
         address: formData.get("address"),
       },
       items: items,
-      couponCode: appliedCoupon?.code || null // Sends the promo code to the backend for secure validation
+      couponCode: appliedCoupon?.code || null 
     };
 
     try {
+      // 1. Call our secure backend to create order and generate PayU Hash
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,18 +53,31 @@ export default function CheckoutPage() {
 
       const data = await response.json();
 
-      if (response.ok && data.success && data.payment_session_id) {
-        const envMode = process.env.NEXT_PUBLIC_CASHFREE_ENVIRONMENT === "PRODUCTION" ? "production" : "sandbox";
-        const cashfree = await load({ mode: envMode });
+      if (response.ok && data.success && data.paymentData) {
+        
+        // 2. PayU Integration: Auto-Submit Form Approach
+        // We dynamically build a form, append the secure hash data, and submit it.
+        const form = document.createElement("form");
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", data.payuUrl); // The secure PayU endpoint
 
-        let checkoutOptions = {
-          paymentSessionId: data.payment_session_id,
-          redirectTarget: "_self",
-        };
+        // Dynamically add all the required parameters as hidden inputs
+        for (const key in data.paymentData) {
+          if (data.paymentData.hasOwnProperty(key)) {
+            const hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", data.paymentData[key]);
+            form.appendChild(hiddenField);
+          }
+        }
 
-        // Wipe the cart clean upon successful handoff to payment gateway
+        // 3. Clear cart (optional, but good practice right before handoff)
         clearCart(); 
-        cashfree.checkout(checkoutOptions);
+
+        // 4. Attach to body and execute the redirect
+        document.body.appendChild(form);
+        form.submit();
         
       } else {
         throw new Error(data.error || "Failed to generate payment session");
@@ -73,9 +85,8 @@ export default function CheckoutPage() {
     } catch (error) {
       console.error("Checkout failed", error);
       alert("Payment Gateway Error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+      setLoading(false); // Only reset loading if it fails, otherwise let it redirect
+    } 
   };
 
   return (

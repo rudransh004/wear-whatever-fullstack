@@ -5,9 +5,9 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { loginWithPassword, signupWithPassword, loginWithMagicLink, loginWithOAuth } from "./actions"
 import { createClient } from "../../utils/supabase/client"
 import Navbar from "../../components/NavBar"
+import { GridScan } from "../../components/GridScan" // <-- NEW IMPORT
 
 function LoginContent() {
-  // FIX 1: Set 'password' as the default active tab
   const [activeTab, setActiveTab] = useState<'password' | 'magic'>('password')
   const [isChecking, setIsChecking] = useState(true)
   
@@ -71,7 +71,7 @@ function LoginContent() {
 
       <div className="bg-zinc-950 border border-white/10 p-6 md:p-8 shadow-2xl">
         
-        {/* TABS - FIX 2: Swapped the order so Password is on the left */}
+        {/* TABS */}
         <div className="flex border-b border-white/10 mb-6">
           <button 
             onClick={() => setActiveTab('password')}
@@ -87,7 +87,7 @@ function LoginContent() {
           </button>
         </div>
 
-        {/* PASSWORD FORM (Now renders first if active) */}
+        {/* PASSWORD FORM */}
         {activeTab === 'password' && (
           <form className="space-y-4 animate-in fade-in slide-in-from-left-2">
             <input 
@@ -111,7 +111,7 @@ function LoginContent() {
           </form>
         )}
 
-        {/* MAGIC LINK FORM (Now renders second) */}
+        {/* MAGIC LINK FORM */}
         {activeTab === 'magic' && (
           <form className="space-y-4 animate-in fade-in slide-in-from-right-2">
             <input 
@@ -173,8 +173,29 @@ export default function LoginPage() {
     <main className="min-h-screen bg-[#020202] pt-32 pb-20 px-6 flex flex-col items-center relative overflow-hidden">
       <Navbar />
       
-      {/* Background Studio Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none z-0"></div>
+      {/* NEW INTERACTIVE GRIDSCAN BACKGROUND */}
+      <div className="absolute inset-0 z-0 pointer-events-auto">
+        <GridScan
+          className="w-full h-full"
+          sensitivity={0.55}
+          lineThickness={1}
+          linesColor="#1a1a1a"    /* Dark grey to blend with bg */
+          gridScale={0.1}
+          scanColor="#f0c808"     /* Brand Yellow */
+          scanOpacity={0.4}
+          enablePost={true}
+          bloomIntensity={0.6}
+          chromaticAberration={0.002}
+          noiseIntensity={0.01}
+          lineJitter={0.1}
+          scanGlow={0.5}
+          scanSoftness={2}
+          enableWebcam={false}
+          showPreview={false}
+        />
+      </div>
+
+      {/* Keeps the subtle yellow glow behind the form */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40vw] h-[40vw] bg-[#f0c808]/5 rounded-full blur-[100px] pointer-events-none z-0"></div>
 
       <Suspense fallback={
