@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '../lib/store'; 
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'; 
 import WishlistButton from './WishlistButton'; 
@@ -66,14 +67,20 @@ export default function ProductCard({ product }: ProductProps) {
       <Link href={`/product/${product.id}`} className="relative aspect-[4/5] w-full overflow-hidden bg-zinc-900 block cursor-crosshair">
         
         {images.map((img, idx) => (
-          <img
+          <div
             key={idx}
-            src={img}
-            alt={`${product.name} - View ${idx + 1}`}
-            className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-700 ease-in-out
-              ${idx === currentImageIdx ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}
-            `}
-          />
+            className={`absolute inset-0 transition-all duration-700 ease-in-out ${idx === currentImageIdx ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
+          >
+            <Image
+              src={img}
+              alt={`${product.name} - View ${idx + 1}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-cover object-center"
+              quality={75}
+              priority={idx === currentImageIdx}
+            />
+          </div>
         ))}
 
         <div className="absolute top-4 right-4 z-20">

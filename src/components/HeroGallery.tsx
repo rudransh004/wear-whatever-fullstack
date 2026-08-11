@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import WatchMenu from './WatchMenu';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -337,7 +338,14 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
                 style={{ transform: `scale(0.85) translateY(40px) rotate(${idx % 2 === 0 ? 12 : -12}deg)` }}
               >
                 <div className="absolute inset-0 bg-zinc-900 border-2 border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden flex items-center justify-center">
-                  <img src={img} alt={`Lookbook ${idx}`} className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
+                  <Image
+                    src={img}
+                    alt={`Lookbook ${idx}`}
+                    fill
+                    sizes="(max-width: 768px) 80vw, 24vw"
+                    className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                    quality={75}
+                  />
                 </div>
               </div>
             </motion.div>

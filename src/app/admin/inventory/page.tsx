@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { prisma } from "../../../lib/prisma";
 
 export default async function AdminInventoryPage() {
@@ -32,7 +33,13 @@ export default async function AdminInventoryPage() {
               <tr key={product.id} className="hover:bg-white/[0.02]">
                 <td className="p-4">
                   <div className="w-10 h-12 bg-zinc-900 border border-white/10 overflow-hidden relative">
-                    <img src={product.images[0]} alt={product.name} className="object-cover w-full h-full opacity-80" />
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name}
+                      fill
+                      sizes="40px"
+                      className="object-cover opacity-80"
+                    />
                   </div>
                 </td>
                 <td className="p-4 text-white uppercase text-xs font-bold">{product.name}</td>

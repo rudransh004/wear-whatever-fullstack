@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, Package, Truck, CheckCircle2, MapPin, AlertCircle, ArrowRight, Receipt, Globe, HelpCircle, ShieldCheck, Clock } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import Navbar from "../../components/NavBar";
 // Adjust this import path if your actions are located elsewhere
 import { getOrderById } from "../../lib/actions";
@@ -270,7 +271,15 @@ export default function OrdersPage() {
                     <div key={i} className="flex items-center gap-4 group">
                       <div className="w-16 h-20 bg-zinc-900 border border-white/5 shrink-0 overflow-hidden relative">
                         <div className="absolute inset-0 flex items-center justify-center text-zinc-800 font-mono text-[8px] uppercase text-center">No Img</div>
-                        {item.image && <img src={item.image} alt={item.name} className="absolute inset-0 w-full h-full object-cover z-10 opacity-80 group-hover:opacity-100 transition-opacity" />}
+                        {item.image && (
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            sizes="80px"
+                            className="absolute inset-0 w-full h-full object-cover z-10 opacity-80 group-hover:opacity-100 transition-opacity"
+                          />
+                        )}
                       </div>
                       <div className="flex-grow">
                         <p className="text-white font-bold text-sm uppercase tracking-wide">{item.name}</p>

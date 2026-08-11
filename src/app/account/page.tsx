@@ -6,6 +6,7 @@ import { logout } from "../login/actions";
 import { prisma } from "../../lib/prisma";
 import Navbar from "../../components/NavBar";
 import Link from "next/link";
+import Image from "next/image";
 import { ShieldCheck, Package, MapPin, LogOut, ArrowRight, Clock, Fingerprint, Mail, HelpCircle } from "lucide-react";
 
 // Import the hydrator component
@@ -172,7 +173,13 @@ export default async function AccountPage() {
                             <div key={item.id} className="flex items-center gap-4">
                               <div className="w-12 h-16 bg-zinc-900 border border-white/5 overflow-hidden relative shrink-0">
                                 {item.image ? (
-                                  <img src={item.image} alt={item.name} className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" />
+                                  <Image
+                                    src={item.image}
+                                    alt={item.name}
+                                    fill
+                                    sizes="48px"
+                                    className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity"
+                                  />
                                 ) : (
                                   <div className="absolute inset-0 flex items-center justify-center text-zinc-800 font-mono text-[8px] uppercase">IMG</div>
                                 )}

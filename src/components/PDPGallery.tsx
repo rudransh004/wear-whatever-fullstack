@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function PDPGallery({ images, productName }: { images: string[], productName: string }) {
@@ -19,7 +20,13 @@ export default function PDPGallery({ images, productName }: { images: string[], 
             onClick={() => setActiveIndex(idx)}
             className={`relative w-20 h-24 md:w-full md:h-32 shrink-0 border-2 overflow-hidden transition-all duration-300 ${activeIndex === idx ? 'border-[#f0c808] opacity-100' : 'border-white/10 opacity-50 hover:opacity-80 hover:border-white/30'}`}
           >
-            <img src={img} alt={`${productName} thumbnail ${idx + 1}`} className="object-cover w-full h-full" />
+            <Image
+              src={img}
+              alt={`${productName} thumbnail ${idx + 1}`}
+              fill
+              sizes="80px"
+              className="object-cover"
+            />
             {activeIndex === idx && (
               <motion.div layoutId="active-thumb" className="absolute inset-0 bg-[#f0c808]/10 pointer-events-none" />
             )}
@@ -30,16 +37,23 @@ export default function PDPGallery({ images, productName }: { images: string[], 
       {/* MAIN IMAGE DISPLAY */}
       <div className="relative w-full aspect-[4/5] md:aspect-auto md:h-[80vh] bg-zinc-900 border border-white/10 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] group">
         <AnimatePresence mode="wait">
-          <motion.img
+          <motion.div
             key={activeIndex}
-            src={displayImages[activeIndex]}
-            alt={`${productName} - View ${activeIndex + 1}`}
             initial={{ opacity: 0, scale: 1.05, filter: "blur(5px)" }}
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, scale: 0.95, filter: "blur(5px)" }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="w-full h-full object-cover"
-          />
+            className="absolute inset-0"
+          >
+            <Image
+              src={displayImages[activeIndex]}
+              alt={`${productName} - View ${activeIndex + 1}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 67vw"
+              className="object-cover"
+              quality={75}
+            />
+          </motion.div>
         </AnimatePresence>
       </div>
 
