@@ -19,7 +19,7 @@ async function main() {
   // High-quality placeholders so your carousel works immediately
   const placeholder1 = "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800";
   const placeholder2 = "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800";
-
+  const placeholder3 = "https://images.unsplash.com/photo-1571119816306-c0c00469dc2f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
   const products = [
     {
       name: "Cyberpunk Oversized Tee",
@@ -27,7 +27,7 @@ async function main() {
       price: 1299.00,
       category: "Oversized",
       // FIXED: Added multiple images separated by commas
-      images: [`${baseUrl}/Cyberpunk-Oversized-Tee/front.jpg`, placeholder1, placeholder2], 
+      images: [placeholder3, placeholder1, placeholder2], 
       isAiEnabled: false
     },
     {

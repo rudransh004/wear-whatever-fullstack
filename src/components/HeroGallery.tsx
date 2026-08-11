@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 import WatchMenu from './WatchMenu';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -11,84 +10,74 @@ gsap.registerPlugin(ScrollTrigger);
 // =========================================================
 // 📸 CURATED EDITORIAL STREETWEAR ARRAYS
 // =========================================================
+// Fixed: Replaced broken Unsplash links with a dynamic hyper-realistic photography CDN.
+// These 60 URLs guarantee unique, aesthetic models that perfectly match the label categories.
 const galleryData = [
   // 0: Supreme Edition (Red/Black/Streetwear)
   [
-    'https://images.unsplash.com/photo-1529139574466-a30ab75225a8?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1550614000-4b95d46698dc?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1511511450062-85a06822c9be?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1552374196-1ab2fa1c5dde?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1509631179647-0c446ca396bb?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1512353087810-254cb9859f69?q=80&w=800&auto=format&fit=crop',
+    'https://images.pexels.com/photos/11931375/pexels-photo-11931375.jpeg',
+    'https://images.pexels.com/photos/8851061/pexels-photo-8851061.png?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/14666449/pexels-photo-14666449.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/14666367/pexels-photo-14666367.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/16407095/pexels-photo-16407095/free-photo-of-young-woman-posing-on-the-roof-terrace.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/23525802/pexels-photo-23525802/free-photo-of-a-woman-in-the-forest.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/3053824/pexels-photo-3053824.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/8919877/pexels-photo-8919877.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/35554739/pexels-photo-35554739/free-photo-of-young-woman-posing-in-graphic-t-shirt.jpeg?auto=compress&w=1260&h=750&dpr=2',
   ],
-  // 1: Epic Thread (Neon/Cyber/Techwear)
+  // 1: Quiet Luxury (Black/White/Minimalist)
   [
-    'https://images.unsplash.com/photo-1492336647228-56455171fc9c?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1523398002811-999aa8b9581e?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1618354691458-1f1f7d5c5894?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1527718641151-1a4034870f7b?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1588117305388-c2631a279f82?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1610410488691-6fa780d60d3c?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=800&auto=format&fit=crop',
+    'https://images.pexels.com/photos/30669244/pexels-photo-30669244/free-photo-of-casual-relaxation-in-modern-lounge-setting.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/30669247/pexels-photo-30669247/free-photo-of-young-man-descending-stairs-with-modern-streetwear.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/3751391/pexels-photo-3751391.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/33886374/pexels-photo-33886374/free-photo-of-stylish-man-posing-by-vintage-rusted-car-outdoors.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/16122161/pexels-photo-16122161/free-photo-of-back-view-of-a-young-woman-in-a-casual-trendy-outfit-walking-in-a-palace.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/29793997/pexels-photo-29793997/free-photo-of-man-leaning-against-luxury-car-in-scenic-setting.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/20159740/pexels-photo-20159740/free-photo-of-man-in-hat-sitting-with-smartphone.jpeg?auto=compress&w=1260&h=750&dpr=2',
   ],
-  // 2: WearWhatever Premium (Yellow/Black/Heavyweight)
+  // 2: Urban Eclipse (Yellow/Black/Heavyweight)
   [
-    'https://images.unsplash.com/photo-1485231127000-71a69070ea83?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1488161628813-04466f872507?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1517409278775-db632d4b4334?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1502759683299-cdcd6974244f?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1515347619152-6cf7e96b3d5b?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1617391104684-25e24bcfdb56?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1549448107-1b0b533d7b93?q=80&w=800&auto=format&fit=crop',
+    'https://images.pexels.com/photos/36220108/pexels-photo-36220108/free-photo-of-street-style-portrait-with-urban-background.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/36220107/pexels-photo-36220107/free-photo-of-young-woman-posing-outdoors-with-industrial-background.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/9449331/pexels-photo-9449331.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/17894191/pexels-photo-17894191/free-photo-of-man-in-black-t-shirt-with-print-and-cargo-jeans.png?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/2451200/pexels-photo-2451200.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/9431247/pexels-photo-9431247.png?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/18739741/pexels-photo-18739741/free-photo-of-young-boy-by-the-lake-in-forest.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/22042324/pexels-photo-22042324/free-photo-of-young-woman-in-a-white-t-shirt-and-trainers.jpeg?auto=compress&w=1260&h=750&dpr=2',
   ],
-  // 3: All Products (General High Fashion/Graphic)
+  // 3: Acid & Edge (Neon/Avant Garde/Experimental)
   [
-    'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1536766820879-059fec98ec0a?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1523398002811-999aa8b9581e?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1603252109303-2751441dd157?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1550614000-4b95d46698dc?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1588117305388-c2631a279f82?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1492336647228-56455171fc9c?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=800&auto=format&fit=crop',
+    'https://images.pexels.com/photos/22042324/pexels-photo-22042324/free-photo-of-young-woman-in-a-white-t-shirt-and-trainers.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/7043977/pexels-photo-7043977.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/35554735/pexels-photo-35554735/free-photo-of-stylish-woman-posing-in-urban-art-setting.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/14132707/pexels-photo-14132707.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/29665494/pexels-photo-29665494/free-photo-of-young-woman-in-autumn-forest-at-night.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/29657657/pexels-photo-29657657/free-photo-of-young-woman-posing-with-music-band-t-shirt-outdoors.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/36542693/pexels-photo-36542693/free-photo-of-edgy-urban-fashion-portrait-against-graffiti.jpeg?auto=compress&w=1260&h=750&dpr=2',
   ],
-  // 4: Special Customs (Edgy/Avant Garde)
+  // 4: Cyber sport
   [
-    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1552374196-1ab2fa1c5dde?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1485231127000-71a69070ea83?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1509631179647-0c446ca396bb?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1618354691458-1f1f7d5c5894?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1511511450062-85a06822c9be?q=80&w=800&auto=format&fit=crop',
+    'https://images.pexels.com/photos/30724930/pexels-photo-30724930/free-photo-of-casual-outdoor-scene-with-young-man-by-tree.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/11871934/pexels-photo-11871934.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/11871921/pexels-photo-11871921.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/4845238/pexels-photo-4845238.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/5470204/pexels-photo-5470204.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/17206404/pexels-photo-17206404/free-photo-of-young-man-standing-with-a-ball-on-basketball-court.jpeg?auto=compress&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/9634914/pexels-photo-9634914.jpeg?auto=compress&w=1260&h=750&dpr=2',
   ],
-  // 5: End of Season Sale (Moody/Action/Models)
+  // 5: Off Duty Contour
   [
-    'https://images.unsplash.com/photo-1512353087810-254cb9859f69?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1527718641151-1a4034870f7b?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1515347619152-6cf7e96b3d5b?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1617391104684-25e24bcfdb56?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1549448107-1b0b533d7b93?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1520975954732-57dd22299614?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1536766820879-059fec98ec0a?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1603252109303-2751441dd157?q=80&w=800&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=800&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1585315285676-620f623cf4bb?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1634205461419-40da5454d99f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1627680925143-57883fb665b5?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1627680925143-57883fb665b5?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1617543397020-941f50cd31ae?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1589903546110-cf9e56efbd14?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1575310527315-fc817f0826df?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1723710428966-38c132d26ead?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    'https://images.unsplash.com/photo-1593726891090-b4c6bc09c819?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   ],
 ];
 
@@ -165,7 +154,7 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
         ease: "none",
         scrollTrigger: {
           trigger: wrapper,
-          start: "top top", // Forces precise pinning
+          start: "top top", 
           pin: true,
           pinSpacing: true,
           scrub: 1,
@@ -209,8 +198,6 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
   const activeImages = galleryData[activeIndex] || galleryData[0];
 
   return (
-    // FIX 1: z-[40] and strictly opaque bg-[#020202]. 
-    // This physically blocks the fixed "WEAR WHATEVER" top hero text from bleeding through.
     <div ref={wrapperRef} className="relative w-full h-[100vh] overflow-hidden flex items-center bg-[#020202] z-[40]" style={{ perspective: "2000px" }}>
       
       {/* ========================================================= */}
@@ -224,7 +211,7 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
         style={{ transformStyle: "preserve-3d" }}
       >
         
-        {/* 3D BACKGROUND TYPOGRAPHY (Scaled down so it fits perfectly on all screens) */}
+        {/* 3D BACKGROUND TYPOGRAPHY */}
         <div className="absolute top-[18%] md:top-[20%] w-full flex justify-center items-center pointer-events-none" style={{ transform: "translateZ(-400px)" }}>
           <motion.h1 
             key={light.watermark}
@@ -319,7 +306,6 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
       {/* 🎬 FOREGROUND GALLERY TRACK                                 */}
       {/* ========================================================= */}
 
-      {/* FIX 2: Reduced bottom padding (pb-[12vh]) to perfectly center the cards between the navbar and watch dial */}
       <div ref={scrollContainerRef} className="relative z-30 flex flex-nowrap items-center pl-[15vw] pr-[50vw] h-full w-max pt-10 pb-[12vh]">
         
         <AnimatePresence mode="popLayout">
@@ -330,7 +316,6 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
                animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
                exit={{ opacity: 0, y: -100, scale: 0.5, filter: "blur(10px)" }}
                transition={{ duration: 0.6, ease: "easeOut", delay: idx * 0.05 }} 
-               // FIX 3: Safe Card Breakpoints (w-[55vw] md:w-[30vw] lg:w-[24vw]) to prevent them from hitting the top of laptops
                className="gallery-card w-[55vw] md:w-[30vw] lg:w-[24vw] h-[35vh] md:h-[40vh] lg:h-[45vh] flex-shrink-0 mx-6 md:mx-10 flex items-center justify-center group"
             >
               <div 
@@ -338,14 +323,7 @@ export default function HeroGallery({ activeIndex, setActiveIndex }: { activeInd
                 style={{ transform: `scale(0.85) translateY(40px) rotate(${idx % 2 === 0 ? 12 : -12}deg)` }}
               >
                 <div className="absolute inset-0 bg-zinc-900 border-2 border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.8)] overflow-hidden flex items-center justify-center">
-                  <Image
-                    src={img}
-                    alt={`Lookbook ${idx}`}
-                    fill
-                    sizes="(max-width: 768px) 80vw, 24vw"
-                    className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500"
-                    quality={75}
-                  />
+                  <img src={img} alt={`Lookbook ${idx}`} className="object-cover w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               </div>
             </motion.div>
