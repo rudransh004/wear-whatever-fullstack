@@ -17,7 +17,7 @@ model Product {
   id          String   @id @default(cuid())
   name        String
   description String
-  price       Float
+  price       Int
   images      String[] // Array of image URLs
   category    String
   isAiEnabled Boolean  @default(false) // To mark AI-generated shirts
@@ -48,10 +48,10 @@ model Order {
   address       String
   
   // NEW: Pricing Breakdown
-  subtotal      Float       @default(0)// Sum of items before discount/shipping
-  discount      Float       @default(0)
-  deliveryFee   Float       @default(0)
-  totalAmount   Float       // Final amount paid
+  subtotal      Int       @default(0)// Sum of items before discount/shipping
+  discount      Int       @default(0)
+  deliveryFee   Int       @default(0)
+  totalAmount   Int       // Final amount paid
   couponCode    String?     // Which coupon was used (if any)
   
   status        String      @default("Processing")
@@ -66,7 +66,7 @@ model OrderItem {
   orderId   String
   productId String
   name      String
-  price     Float
+  price     Int
   quantity  Int
   order     Order  @relation(fields: [orderId], references: [id])
 }
@@ -93,9 +93,9 @@ model Coupon {
   id            String   @id @default(cuid())
   code          String   @unique
   discountType  String   // "PERCENTAGE" (e.g., 10%) or "FLAT" (e.g., ₹500)
-  discountValue Float
+  discountValue Int
   isActive      Boolean  @default(true)
-  minCartValue  Float    @default(0) // e.g., Must spend ₹2000 to use this
+  minCartValue  Int    @default(0) // e.g., Must spend ₹2000 to use this
   createdAt     DateTime @default(now())
 }
 

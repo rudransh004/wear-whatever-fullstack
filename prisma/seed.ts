@@ -24,7 +24,7 @@ async function main() {
     {
       name: "Cyberpunk Oversized Tee",
       description: "Heavyweight cotton with a futuristic neon aesthetic.",
-      price: 1299.00,
+      price: 799,
       category: "Oversized",
       // FIXED: Added multiple images separated by commas
       images: [placeholder3, placeholder1, placeholder2], 
@@ -33,7 +33,7 @@ async function main() {
     {
       name: "All Die I Will Alive",
       description: "Bold graphic statement tee from the WearWhatever legacy collection.",
-      price: 999.00,
+      price: 749,
       category: "Graphic",
       images: [`${baseUrl}/All_die_I_ll_alive/front.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -41,7 +41,7 @@ async function main() {
     {
       name: "Anime Girl Edition",
       description: "Custom illustrated anime aesthetic for the modern otaku.",
-      price: 1099.00,
+      price: 699,
       category: "Anime",
       images: [`${baseUrl}/Anime_girl/girl_anime_frame_4.png`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -49,7 +49,7 @@ async function main() {
     {
       name: "Astronaut Edition",
       description: "Space-themed minimalist design exploring the digital frontier.",
-      price: 1199.00,
+      price: 849,
       category: "Astronaut_Edition",
       images: [`${baseUrl}/Astronaut_Edition/Astronuat_Black_2.png`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -57,7 +57,7 @@ async function main() {
     {
       name: "Billie Eilish Tribute",
       description: "Streetwear inspired by the iconic style of Billie Eilish.",
-      price: 1299.00,
+      price: 799,
       category: "Artist",
       images: [`${baseUrl}/BILLIE_EILISH/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -65,7 +65,7 @@ async function main() {
     {
       name: "BOBB Graphic Tee",
       description: "Unique character design from the BOBB collection.",
-      price: 899.00,
+      price: 799,
       category: "Graphic",
       images: [`${baseUrl}/BOBB/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -73,7 +73,7 @@ async function main() {
     {
       name: "Boy Anime Concept",
       description: "Sleek boy anime character illustration on premium fabric.",
-      price: 1099.00,
+      price: 849,
       category: "Anime",
       images: [`${baseUrl}/Boy_Anime/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -81,7 +81,7 @@ async function main() {
     {
       name: "BTH Signature",
       description: "Modern typography and abstract elements.",
-      price: 899.00,
+      price: 699,
       category: "Minimalist",
       images: [`${baseUrl}/BTH/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -89,7 +89,7 @@ async function main() {
     {
       name: "California Dreamin'",
       description: "West-coast inspired aesthetic with a summer vibe.",
-      price: 999.00,
+      price: 799,
       category: "Lifestyle",
       images: [`${baseUrl}/California/california.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -97,7 +97,7 @@ async function main() {
     {
       name: "Chill Pill Essential",
       description: "Take a break with this relaxed-fit graphic tee.",
-      price: 849.00,
+      price: 649,
       category: "Essential",
       images: [`${baseUrl}/CHILL_PILL/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -105,7 +105,7 @@ async function main() {
     {
       name: "Crop Top Kitty",
       description: "Playful cat illustration on a premium crop top cut.",
-      price: 799.00,
+      price: 599,
       category: "Crop Top",
       images: [`${baseUrl}/crop_top_KITTY/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -113,7 +113,7 @@ async function main() {
     {
       name: "Dino Vintage",
       description: "Retro dinosaur illustration for a nostalgic look.",
-      price: 899.00,
+      price: 699,
       category: "Vintage",
       images: [`${baseUrl}/DINO/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -121,7 +121,7 @@ async function main() {
     {
       name: "Donald Brooklyn",
       description: "Brooklyn-style urban design with a character twist.",
-      price: 1149.00,
+      price: 749,
       category: "Urban",
       images: [`${baseUrl}/DONALD_BROOKLYN/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -129,7 +129,7 @@ async function main() {
     {
       name: "Follow Your Dream",
       description: "Inspirational typography on high-performance apparel.",
-      price: 899.00,
+      price: 599,
       category: "Essential",
       images: [`${baseUrl}/FOLLOW_YOUR_DREAM/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -137,7 +137,7 @@ async function main() {
     {
       name: "Just Psych",
       description: "Psychological and abstract visual patterns.",
-      price: 1099.00,
+      price: 999,
       category: "Abstract",
       images: [`${baseUrl}/JUST_PSYCH/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -145,7 +145,7 @@ async function main() {
     {
       name: "Kathak Heritage",
       description: "Celebrating traditional Indian dance with a modern fit.",
-      price: 1299.00,
+      price: 699,
       category: "Heritage",
       images: [`${baseUrl}/Kathak/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -153,7 +153,7 @@ async function main() {
     {
       name: "Looking of Ghost",
       description: "Ethereal and spooky graphic for the bold.",
-      price: 999.00,
+      price: 699,
       category: "Graphic",
       images: [`${baseUrl}/Looking_of_ghost/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -161,7 +161,7 @@ async function main() {
     {
       name: "Minions Mania",
       description: "Vibrant yellow fun in the signature WearWhatever style.",
-      price: 899.00,
+      price: 599,
       category: "Graphic",
       images: [`${baseUrl}/MINIONS/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -169,7 +169,7 @@ async function main() {
     {
       name: "Music Dance Funky",
       description: "Feel the beat with this funky music-inspired tee.",
-      price: 949.00,
+      price: 949,
       category: "Music",
       images: [`${baseUrl}/Music_Dance_funky/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -177,7 +177,7 @@ async function main() {
     {
       name: "Obsession Premium",
       description: "Deep aesthetic design for those with an eye for detail.",
-      price: 1199.00,
+      price: 799,
       category: "Premium",
       images: [`${baseUrl}/Obsession/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -185,7 +185,7 @@ async function main() {
     {
       name: "Paper Chaser",
       description: "Urban streetwear for the focused and driven.",
-      price: 999.00,
+      price: 799,
       category: "Urban",
       images: [`${baseUrl}/Paper_Chaser/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -193,7 +193,7 @@ async function main() {
     {
       name: "Paris Aesthetic",
       description: "European minimalist vibes on high-quality fabric.",
-      price: 1049.00,
+      price: 1999,
       category: "Lifestyle",
       images: [`${baseUrl}/PARIS/main.png`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -201,7 +201,7 @@ async function main() {
     {
       name: "Peaky Blinder Original",
       description: "By order of the WearWhatever crew.",
-      price: 1299.00,
+      price: 999,
       category: "Peaky_Blinder",
       images: [`${baseUrl}/PEAKY_BLINDER/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -209,7 +209,7 @@ async function main() {
     {
       name: "Porsche GT Edition",
       description: "Automotive excellence meets streetwear performance.",
-      price: 1399.00,
+      price: 999,
       category: "Automotive",
       images: [`${baseUrl}/Porshe_gt/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -217,7 +217,7 @@ async function main() {
     {
       name: "Ride or Die",
       description: "Tough aesthetic for the road-ready soul.",
-      price: 999.00,
+      price: 599,
       category: "Graphic",
       images: [`${baseUrl}/Ride/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -225,7 +225,7 @@ async function main() {
     {
       name: "Shinchan Retro",
       description: "Everyone's favorite mischievous character in a new style.",
-      price: 899.00,
+      price: 599,
       category: "Graphic",
       images: [`${baseUrl}/Shinchan/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -233,7 +233,7 @@ async function main() {
     {
       name: "Space Edition: Infinity",
       description: "Exploring the depths of the universe in comfort.",
-      price: 1199.00,
+      price: 799,
       category: "Space_edition",
       images: [`${baseUrl}/space_edition/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -241,7 +241,7 @@ async function main() {
     {
       name: "Super Cars Collection",
       description: "High-octane design for car enthusiasts.",
-      price: 1249.00,
+      price: 749,
       category: "Automotive",
       images: [`${baseUrl}/SUPER_CARS/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false
@@ -249,7 +249,7 @@ async function main() {
     {
       name: "Taylor Swift: The Eras",
       description: "Inspired by the journey of an icon.",
-      price: 1399.00,
+      price: 599,
       category: "Artist",
       images: [`${baseUrl}/Taylor_Swift_edition/main.jpg`, placeholder1, placeholder2],
       isAiEnabled: false

@@ -1,113 +1,62 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
 import { createClient } from "../../../utils/supabase/server";
-import crypto from "crypto"; // Required for PayU Hashing
+import crypto from "crypto";
+import { applicationUrl, jsonError } from "../../../lib/security";
+
+const MAX_ITEM_QUANTITY = 10;
+const money = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
 
 export async function POST(req: Request) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    const body = await req.json();
-    const { customer, items, couponCode } = body;
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return jsonError("Authentication is required to checkout.", 401);
+    const { customer, items, couponCode } = await req.json();
+    if (!customer || !Array.isArray(items) || items.length === 0 || items.length > 50 || typeof customer.name !== "string" || typeof customer.address !== "string" || customer.name.trim().length < 2 || customer.name.length > 100 || customer.address.trim().length < 10 || customer.address.length > 1000) return jsonError("Invalid checkout request.", 400);
 
-    // 1. SECURE PRICING CALCULATION
-    let secureSubtotal = 0;
+    // The browser supplies IDs and integer quantities only; DB product data is the price authority.
+    const quantities = new Map<string, number>();
     for (const item of items) {
-      const dbProduct = await prisma.product.findUnique({ where: { id: item.id } });
-      if (!dbProduct) throw new Error(`Product ${item.id} not found.`);
-      secureSubtotal += dbProduct.price * item.quantity;
+      if (typeof item?.id !== "string" || !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > MAX_ITEM_QUANTITY) return jsonError("Invalid cart item.", 400);
+      quantities.set(item.id, (quantities.get(item.id) ?? 0) + item.quantity);
     }
+    if ([...quantities.values()].some(q => q > MAX_ITEM_QUANTITY)) return jsonError("Item quantity exceeds the limit.", 400);
+    const products = await prisma.product.findMany({ where: { id: { in: [...quantities.keys()] } } });
+    if (products.length !== quantities.size) return jsonError("One or more products no longer exist.", 400);
+    const productById = new Map(products.map(product => [product.id, product]));
+    const subtotal = money(products.reduce((sum, product) => sum + product.price * (quantities.get(product.id) ?? 0), 0));
+    const deliveryFee = subtotal < 1499 ? 50 : 0;
 
-    // 2. DELIVERY LOGIC
-    let secureDeliveryFee = secureSubtotal < 1499 ? 50 : 0;
-
-    // 3. SECURE COUPON VALIDATION
-    let secureDiscount = 0;
-    if (couponCode) {
-      const dbCoupon = await prisma.coupon.findUnique({ where: { code: couponCode.toUpperCase() } });
-      if (dbCoupon && dbCoupon.isActive && secureSubtotal >= dbCoupon.minCartValue) {
-        if (dbCoupon.discountType === "PERCENTAGE") {
-          secureDiscount = (secureSubtotal * dbCoupon.discountValue) / 100;
-        } else if (dbCoupon.discountType === "FLAT") {
-          secureDiscount = dbCoupon.discountValue;
-        }
+    let discount = 0;
+    let normalizedCoupon: string | null = null;
+    if (typeof couponCode === "string" && couponCode.length <= 64) {
+      const coupon = await prisma.coupon.findUnique({ where: { code: couponCode.trim().toUpperCase() } });
+      if (coupon?.isActive && subtotal >= coupon.minCartValue) {
+        discount = coupon.discountType === "PERCENTAGE" ? subtotal * coupon.discountValue / 100 : coupon.discountType === "FLAT" ? coupon.discountValue : 0;
+        discount = money(Math.min(subtotal, Math.max(0, discount)));
+        normalizedCoupon = coupon.code;
       }
     }
+    const total = money(Math.max(0, subtotal + deliveryFee - discount));
+    if (total <= 0) return jsonError("This order requires manual review.", 400);
 
-    // 4. FINAL MATH
-    let secureTotal = secureSubtotal + secureDeliveryFee - secureDiscount;
-    secureTotal = Math.max(0, secureTotal); 
-
-    // 5. Create Order in Database
-    const newOrder = await prisma.order.create({
-      data: {
-        customerName: customer.name,
-        customerEmail: customer.email,
-        address: customer.address,
-        subtotal: secureSubtotal,
-        deliveryFee: secureDeliveryFee,
-        discount: secureDiscount,
-        totalAmount: secureTotal,
-        couponCode: couponCode || null,
-        userId: user?.id || null,
-        items: { 
-          create: items.map((item: any) => ({
-            productId: item.id, 
-            name: `${item.name} (Size: ${item.size || 'M'})`, 
-            price: item.price, 
-            quantity: item.quantity,
-          }))
-        },
-      },
-    });
-
-    // 6. PAYU CRYPTOGRAPHIC INTEGRATION
-    const payuEnv = process.env.PAYU_ENVIRONMENT || "TEST";
-    const payuUrl = payuEnv === "PROD" ? "https://secure.payu.in/_payment" : "https://test.payu.in/_payment";
-    const payuKey = process.env.PAYU_MERCHANT_KEY!;
-    const payuSalt = process.env.PAYU_MERCHANT_SALT!;
-    
-    // 💡 THE FIX: Dynamically reconstruct the URL from the browser's request headers
-    const protocol = req.headers.get("x-forwarded-proto") || "http";
-    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "localhost:3000";
-    const baseUrl = `${protocol}://${host}`;
-
-    // Format Data for PayU
-    const txnid = newOrder.id.toString();
-    const amount = secureTotal.toString(); // PayU expects a string
-    const productinfo = "WearWhatever_Order";
-    const firstname = customer.name.split(" ")[0]; // PayU prefers first name
-    const email = customer.email;
-    const phone = customer.phone || "9999999999";
-
-    // PAYU HASHING FORMULA: key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||salt
-    // We leave udf1 to udf5 blank (hence the consecutive pipes ||||||)
-    const hashString = `${payuKey}|${txnid}|${amount}|${productinfo}|${firstname}|${email}|||||||||||${payuSalt}`;
-    
-    // Generate SHA-512 Hash
-    const hash = crypto.createHash("sha512").update(hashString).digest("hex");
-
-    // Return the parameters to the frontend so it can construct the form
-    return NextResponse.json({
-      success: true,
-      payuUrl: payuUrl,
-      paymentData: {
-        key: payuKey,
-        txnid: txnid,
-        amount: amount,
-        productinfo: productinfo,
-        firstname: firstname,
-        email: email,
-        phone: phone,
-        // 🚀 DYNAMIC URLS IN ACTION!
-        surl: `${baseUrl}/api/payu/success`,
-        furl: `${baseUrl}/api/payu/failure`,
-        hash: hash,
-      }
-    });
-
-  } catch (error: any) {
-    console.error("Checkout Security Check Failed:", error.message);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    const order = await prisma.order.create({ data: {
+      customerName: customer.name.trim(), customerEmail: user.email ?? "", address: customer.address.trim(), userId: user.id,
+      subtotal, deliveryFee, discount, totalAmount: total, couponCode: normalizedCoupon,
+      items: { create: [...quantities.entries()].map(([productId, quantity]) => { const product = productById.get(productId)!; return { productId, name: product.name, price: product.price, quantity }; }) },
+    } });
+    const key = process.env.PAYU_MERCHANT_KEY;
+    const salt = process.env.PAYU_MERCHANT_SALT;
+    if (!key || !salt) throw new Error("PayU is not configured");
+    const amount = total.toFixed(2), productinfo = "WearWhatever_Order", firstname = customer.name.trim().split(/\s+/)[0], email = user.email ?? "";
+    const phone = typeof customer.phone === "string" && /^\d{10}$/.test(customer.phone) ? customer.phone : "9999999999";
+    const hash = crypto.createHash("sha512").update(`${key}|${order.id}|${amount}|${productinfo}|${firstname}|${email}|||||||||||${salt}`).digest("hex");
+    const baseUrl = applicationUrl();
+    const payuUrl = process.env.PAYU_ENVIRONMENT === "PROD" ? "https://secure.payu.in/_payment" : "https://test.payu.in/_payment";
+    return NextResponse.json({ success: true, payuUrl, paymentData: { key, txnid: order.id, amount, productinfo, firstname, email, phone, surl: `${baseUrl}/api/payu/success`, furl: `${baseUrl}/api/payu/failure`, hash } });
+  } catch (error) {
+    console.error("Checkout failed", error);
+    return jsonError("Unable to initialize payment.", 500);
   }
 }

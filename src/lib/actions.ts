@@ -2,14 +2,18 @@
 
 import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
+import { createClient } from "../utils/supabase/server";
 
 /**
  * Fetches a single order by its ID for the tracking page.
  */
 export async function getOrderById(orderId: string) {
   try {
-    const order = await prisma.order.findUnique({
-      where: { id: orderId },
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+    const order = await prisma.order.findFirst({
+      where: { id: orderId, userId: user.id },
       include: {
         items: true,
       },
@@ -68,6 +72,9 @@ export async function deleteOrder(orderId: string) {
 
 export async function toggleWishlist(userId: string, productId: string) {
   try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user || user.id !== userId) return { error: "UNAUTHORIZED" };
     // Check if it already exists
     const existing = await prisma.wishlist.findUnique({
       where: {
@@ -99,6 +106,9 @@ export async function toggleWishlist(userId: string, productId: string) {
 // Fetch all wishlist product IDs for a user
 export async function getUserWishlist(userId: string) {
   try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user || user.id !== userId) return [];
     const list = await prisma.wishlist.findMany({
       where: { userId },
       select: { productId: true }
