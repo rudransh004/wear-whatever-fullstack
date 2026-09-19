@@ -11,18 +11,24 @@ function applySecurityHeaders(response: NextResponse, policy: string) {
   response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
 }
 
-export async function middleware(request: NextRequest) {
+// FIXED: Using "export default" satisfies the Next.js 16.1.6 proxy requirement
+export default async function proxy(request: NextRequest) {
   const nonce = crypto.randomUUID().replace(/-/g, "");
   request.headers.set("x-nonce", nonce);
   const unsafe = !["GET", "HEAD", "OPTIONS"].includes(request.method);
   const providerCallback = request.nextUrl.pathname.startsWith("/api/payu/") || request.nextUrl.pathname.startsWith("/api/webhook/cashfree");
+  
   // Payment callbacks bypass this check and are cryptographically verified by their route handlers.
   if (unsafe && !providerCallback) {
     const origin = request.headers.get("origin");
     if (!origin || origin !== request.nextUrl.origin) return NextResponse.json({ error: "Cross-site request blocked" }, { status: 403 });
   }
+  
   const response = await updateSession(request);
-  applySecurityHeaders(response, `default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://test.payu.in https://secure.payu.in; script-src 'self' 'nonce-${nonce}' 'strict-dynamic'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'none'; upgrade-insecure-requests`);
+  
+  // Includes https://challenges.cloudflare.com to allow the CAPTCHA widget
+  applySecurityHeaders(response, `default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://test.payu.in https://secure.payu.in; script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https://challenges.cloudflare.com; upgrade-insecure-requests`);
+  
   return response;
 }
 
