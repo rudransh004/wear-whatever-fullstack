@@ -27,7 +27,8 @@ export default async function proxy(request: NextRequest) {
   const response = await updateSession(request);
   
   // Includes https://challenges.cloudflare.com to allow the CAPTCHA widget
-  applySecurityHeaders(response, `default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://test.payu.in https://secure.payu.in; script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https://challenges.cloudflare.com; upgrade-insecure-requests`);
+  // Includes form-action 'self' https: to allow secure banking redirects
+  applySecurityHeaders(response, `default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https:; script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self' https://challenges.cloudflare.com; upgrade-insecure-requests`);
   
   return response;
 }

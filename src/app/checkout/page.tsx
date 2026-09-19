@@ -77,7 +77,13 @@ export default function CheckoutPage() {
 
         // 4. Attach to body and execute the redirect
         document.body.appendChild(form);
+        form.submit(); 
+        /* console.log("PayU URL:", data.payuUrl);
+        console.log("Payment data:", data.paymentData);
+
+        document.body.appendChild(form);
         form.submit();
+        console.log("submit() called"); */
         
       } else {
         throw new Error(data.error || "Failed to generate payment session");
